@@ -1,0 +1,54 @@
+import React, { useContext, useState } from "react";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { ButtonGroup, Text } from "@rneui/themed";
+import { Context as AuthContext } from "../context/AuthContext";
+import AuthForm from "../components/AuthForm";
+
+const SignupScreen = ({ navigation }) => {
+  const { state, signup, clearErrorMessage } = useContext(AuthContext);
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const accountType = selectedIndex === 0 ? "User" : "Volunteer";
+
+  return (
+    <View style={styles.container}>
+      {/* <NavigationEvents onWillBlur={clearErrorMessage} /> */}
+      <AuthForm
+        headerText="Sign Up for iSober"
+        errorMessage={state.errorMessage}
+        submitButtonText="Sign Up"
+        onSubmit={signup}
+        accountType={accountType}
+      />
+      <Text>Account Type</Text>
+      <ButtonGroup
+        buttons={["User", "Volunteer"]}
+        selectedIndex={selectedIndex}
+        onPress={(index) => setSelectedIndex(index)}
+      />
+      <TouchableOpacity onPress={() => navigation.navigate("Signin")}>
+        <Text style={styles.link}>Already have an account? Sign in here</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+SignupScreen.navigationOptions = {
+  headerShown: false,
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    marginBottom: 200,
+  },
+  link: {
+    color: "blue",
+    marginLeft: 15,
+    marginTop: 15,
+  },
+});
+
+export default SignupScreen;
