@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Text, Input, Button } from "@rneui/themed";
+import { Text, Input, Button, ButtonGroup } from "@rneui/themed";
 import { useNotifications } from "../hooks/useNotifications";
 
 const AuthForm = ({
@@ -8,11 +8,14 @@ const AuthForm = ({
   errorMessage,
   onSubmit,
   submitButtonText,
-  accountType,
+  SignupScreen,
 }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [expoPushToken, setExpoPushToken] = useState("");
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const accountType = selectedIndex === 0 ? "User" : "Volunteer";
 
   const { registerForPushNotificationsAsync } = useNotifications();
 
@@ -44,6 +47,13 @@ const AuthForm = ({
       </View>
       {errorMessage ? (
         <Text style={styles.errorMessage}>{errorMessage}</Text>
+      ) : null}
+      {SignupScreen ? (
+        <ButtonGroup
+          buttons={["User", "Volunteer"]}
+          selectedIndex={selectedIndex}
+          onPress={(index) => setSelectedIndex(index)}
+        />
       ) : null}
       <View style={styles.buttonView}>
         <Button

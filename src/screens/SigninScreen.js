@@ -6,9 +6,12 @@ import AuthForm from "../components/AuthForm";
 const SigninScreen = ({ navigation }) => {
   const { state, signin, clearErrorMessage } = useContext(AuthContext);
 
+  navigation.addListener("blur", () => {
+    clearErrorMessage();
+  });
+
   return (
     <View style={styles.container}>
-      {/* <NavigationEvents onWillBlur={clearErrorMessage} /> */}
       <AuthForm
         headerText="Sign In to iSober"
         errorMessage={state.errorMessage}

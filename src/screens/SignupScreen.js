@@ -5,27 +5,20 @@ import { Context as AuthContext } from "../context/AuthContext";
 import AuthForm from "../components/AuthForm";
 
 const SignupScreen = ({ navigation }) => {
-  const { state, signup, clearErrorMessage } = useContext(AuthContext);
+  const { state, signup } = useContext(AuthContext);
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const accountType = selectedIndex === 0 ? "User" : "Volunteer";
+  navigation.addListener("blur", () => {
+    clearErrorMessage();
+  });
 
   return (
     <View style={styles.container}>
-      {/* <NavigationEvents onWillBlur={clearErrorMessage} /> */}
       <AuthForm
         headerText="Sign Up for iSober"
         errorMessage={state.errorMessage}
         submitButtonText="Sign Up"
         onSubmit={signup}
-        accountType={accountType}
-      />
-      <Text>Account Type</Text>
-      <ButtonGroup
-        buttons={["User", "Volunteer"]}
-        selectedIndex={selectedIndex}
-        onPress={(index) => setSelectedIndex(index)}
+        SignupScreen={true}
       />
       <TouchableOpacity onPress={() => navigation.navigate("Signin")}>
         <Text style={styles.link}>Already have an account? Sign in here</Text>

@@ -19,25 +19,18 @@ import { navigationRef } from "./src/navigationRef";
 const AuthStack = createNativeStackNavigator();
 const MainFlowTabsNav = createBottomTabNavigator();
 
-// function MainFlowTabs() {
-//   return (
-//     <MainFlowTabsNav.Navigator>
-//       <MainFlowTabs.Screen name="CommunityFeed" component={CommunityFeed} />
-//       <MainFlowTabs.Screen name="Connect" component={ConnectScreen} />
-//       <MainFlowTabs.Screen name="Tracker" component={TrackerScreen} />
-//       <MainFlowTabs.Screen name="Account" component={AccountScreen} />
-//     </MainFlowTabsNav.Navigator>
-//   );
-// }
-
 const MainFlowTabs = () => {
   return (
     <MainFlowTabsNav.Navigator>
-      <MainFlowTabsNav.Screen name="CommunityFeed" component={CommunityFeed} />
-      <MainFlowTabsNav.Screen name="Connect" component={ConnectScreen} />
-      <MainFlowTabsNav.Screen name="Tracker" component={TrackerScreen} />
-      <MainFlowTabsNav.Screen name="Account" component={AccountScreen} />
-      <MainFlowTabsNav.Screen name="VideoCall" component={VideoCallScreen} />
+      <MainFlowTabsNav.Screen
+        name="Community"
+        component={CommunityFeed}
+        options={{ headerShown: false }}
+      />
+      <MainFlowTabsNav.Screen name="Connect" component={ConnectScreen} options={{ headerShown: false }} />
+      <MainFlowTabsNav.Screen name="Tracker" component={TrackerScreen} options={{ headerShown: false }} />
+      <MainFlowTabsNav.Screen name="Account" component={AccountScreen} options={{ headerShown: false }} />
+      <MainFlowTabsNav.Screen name="VideoCall" component={VideoCallScreen} options={{ headerShown: false }} />
     </MainFlowTabsNav.Navigator>
   );
 };
@@ -96,10 +89,13 @@ export default function App() {
       <CommunityFeedProvider>
         <AuthProvider>
           <NavigationContainer ref={navigationRef}>
-            <AuthStack.Navigator>
+            <AuthStack.Navigator screenOptions={{ headerShown: false }}>
               <AuthStack.Screen name="Signup" component={SignupScreen} />
               <AuthStack.Screen name="Signin" component={SigninScreen} />
-              <AuthStack.Screen name="MainFlowTabs" component={MainFlowTabs} />
+              <AuthStack.Screen
+                name="MainFlowTabs"
+                component={MainFlowTabs}
+              />
             </AuthStack.Navigator>
           </NavigationContainer>
         </AuthProvider>

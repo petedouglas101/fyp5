@@ -147,24 +147,6 @@ const VideoCallScreen = () => {
     }
   };
 
-  // const query = candidatesCollection.where("userId", "==", callee);
-  // const unsubscribe = query.onSnapshot((snapshot) => {
-  //   snapshot.docChanges().forEach((change) => {
-  //     if (change.type === "added") {
-  //       //   const data = change.doc.data();
-  //       //   peerConnection.addIceCandidate(data.candidate);
-  //       peerConnection.addEventListener("icecandidate", (event) => {
-  //         if (event.candidate) {
-  //           candidatesCollection.add({
-  //             userId: callee,
-  //             candidate: event.candidate,
-  //           });
-  //         }
-  //       });
-  //     }
-  //   });
-  // });
-
   const create = async () => {
     console.log("calling");
     console.log("connecting", connecting.current);
@@ -182,16 +164,6 @@ const VideoCallScreen = () => {
       const callWithOffer = { offer: { type: offer.type, sdp: offer.sdp } };
       callRef.set({ callWithOffer });
     }
-
-    // if (!connecting.current) {
-    //   connecting.current = true;
-    //   await setupWebRTC();
-
-    //   const callRef = firestore().collection("calls").doc("chatId");
-
-    //   //Exchange ICE candidates
-    //   collectIceCandidates(callRef, "caller", "callee");
-    // }
   };
 
   //Helper function to exchange ICE candidates between caller and callee. Caller is local user and callee is remote user
@@ -218,27 +190,6 @@ const VideoCallScreen = () => {
       });
     });
   };
-
-  //   const collectIceCandidates = async (callRef, caller, callee) => {
-  //     const candidatesCollection = callRef.collection(caller);
-  //     const query = candidatesCollection.where("userId", "==", callee);
-  //     const unsubscribe = query.onSnapshot((snapshot) => {
-  //       snapshot.docChanges().forEach((change) => {
-  //         if (change.type === "added") {
-  //           //   const data = change.doc.data();
-  //           //   peerConnection.addIceCandidate(data.candidate);
-  //           peerConnection.addEventListener("icecandidate", (event) => {
-  //             if (event.candidate) {
-  //               candidatesCollection.add({
-  //                 userId: callee,
-  //                 candidate: event.candidate,
-  //               });
-  //             }
-  //           });
-  //         }
-  //       });
-  //     });
-  //   };
 
   return (
     <View style={styles.container}>

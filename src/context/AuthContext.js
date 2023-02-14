@@ -38,9 +38,6 @@ const clearErrorMessage = (dispatch) => {
 };
 
 const signup = (dispatch) => {
-  //try to signup
-  //handle success by updating state
-  //handle failure by showing error message
   return async ({ email, password, accountType, expoPushToken }) => {
     try {
       const response = await appApi.post("/signup", {
@@ -51,7 +48,7 @@ const signup = (dispatch) => {
       });
       await AsyncStorage.setItem("token", response.data.token);
       dispatch({ type: "signin", payload: response.data.token });
-      RootNavigation.navigate("Signin");
+      RootNavigation.navigate("MainFlowTabs");
     } catch (err) {
       dispatch({
         type: "add_error",
@@ -62,9 +59,6 @@ const signup = (dispatch) => {
 };
 
 const signin = (dispatch) => {
-  //try to signin
-  //handle success by updating state
-  //handle failure by showing error message
   return async ({ email, password }) => {
     try {
       const response = await appApi.post("/signin", { email, password });

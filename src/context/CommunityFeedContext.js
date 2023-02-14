@@ -22,13 +22,11 @@ const fetchPosts = (dispatch) => {
 };
 
 const createPost = (dispatch) => {
-  //Content from blog goes within brackets
   return async () => {
     try {
-      const response = await appApi.post("/postblog");//Contentfmfkmk
+      const response = await appApi.post("/postblog");
       dispatch({ type: "create_post", payload: response.data });
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 };
 
