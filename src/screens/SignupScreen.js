@@ -5,7 +5,7 @@ import { Context as AuthContext } from "../context/AuthContext";
 import AuthForm from "../components/AuthForm";
 
 const SignupScreen = ({ navigation }) => {
-  const { state, signup } = useContext(AuthContext);
+  const { state, signup, clearErrorMessage } = useContext(AuthContext);
 
   navigation.addListener("blur", () => {
     clearErrorMessage();

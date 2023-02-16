@@ -1,7 +1,7 @@
 import createDataContext from "./createDataContext";
 import appApi from "../api/server";
 
-const communityFeedReducer = (state, action) => {
+const communityReducer = (state, action) => {
   switch (action.type) {
     case "fetch_posts":
       return action.payload;
@@ -16,22 +16,22 @@ const communityFeedReducer = (state, action) => {
 
 const fetchPosts = (dispatch) => {
   return async () => {
-    const response = await appApi.get("/blogposts");
+    const response = await appApi.get("/communityposts");
     dispatch({ type: "fetch_posts", payload: response.data });
   };
 };
 
 const createPost = (dispatch) => {
-  return async () => {
+  return async ({ content }) => {
     try {
-      const response = await appApi.post("/postblog");
+      const response = await appApi.post("/postToCommunity", { content });
       dispatch({ type: "create_post", payload: response.data });
     } catch (error) {}
   };
 };
 
 export const { Context, Provider } = createDataContext(
-  communityFeedReducer,
+  communityReducer,
   { fetchPosts, createPost },
   []
 );

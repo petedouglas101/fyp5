@@ -7,12 +7,12 @@ import * as Notifications from "expo-notifications";
 import SignupScreen from "./src/screens/SignupScreen";
 import SigninScreen from "./src/screens/SigninScreen";
 import AccountScreen from "./src/screens/AccountScreen";
-import CommunityFeed from "./src/screens/CommunityFeed";
+import CommunityScreen from "./src/screens/CommunityScreen";
 import ConnectScreen from "./src/screens/ConnectScreen";
 import TrackerScreen from "./src/screens/TrackerScreen";
 import VideoCallScreen from "./src/screens/VideoCallScreen";
 import { Provider as AuthProvider } from "./src/context/AuthContext";
-import { Provider as CommunityFeedProvider } from "./src/context/CommunityFeedContext";
+import { Provider as CommunityProvider } from "./src/context/CommunityContext";
 import { Provider as ConnectProvider } from "./src/context/ConnectContext";
 import { navigationRef } from "./src/navigationRef";
 
@@ -24,13 +24,29 @@ const MainFlowTabs = () => {
     <MainFlowTabsNav.Navigator>
       <MainFlowTabsNav.Screen
         name="Community"
-        component={CommunityFeed}
+        component={CommunityScreen}
         options={{ headerShown: false }}
       />
-      <MainFlowTabsNav.Screen name="Connect" component={ConnectScreen} options={{ headerShown: false }} />
-      <MainFlowTabsNav.Screen name="Tracker" component={TrackerScreen} options={{ headerShown: false }} />
-      <MainFlowTabsNav.Screen name="Account" component={AccountScreen} options={{ headerShown: false }} />
-      <MainFlowTabsNav.Screen name="VideoCall" component={VideoCallScreen} options={{ headerShown: false }} />
+      <MainFlowTabsNav.Screen
+        name="Connect"
+        component={ConnectScreen}
+        options={{ headerShown: false }}
+      />
+      <MainFlowTabsNav.Screen
+        name="Tracker"
+        component={TrackerScreen}
+        options={{ headerShown: false }}
+      />
+      <MainFlowTabsNav.Screen
+        name="Account"
+        component={AccountScreen}
+        options={{ headerShown: false }}
+      />
+      <MainFlowTabsNav.Screen
+        name="VideoCall"
+        component={VideoCallScreen}
+        options={{ headerShown: false }}
+      />
     </MainFlowTabsNav.Navigator>
   );
 };
@@ -86,20 +102,17 @@ export default function App() {
 
   return (
     <ConnectProvider>
-      <CommunityFeedProvider>
+      <CommunityProvider>
         <AuthProvider>
           <NavigationContainer ref={navigationRef}>
             <AuthStack.Navigator screenOptions={{ headerShown: false }}>
               <AuthStack.Screen name="Signup" component={SignupScreen} />
               <AuthStack.Screen name="Signin" component={SigninScreen} />
-              <AuthStack.Screen
-                name="MainFlowTabs"
-                component={MainFlowTabs}
-              />
+              <AuthStack.Screen name="MainFlowTabs" component={MainFlowTabs} />
             </AuthStack.Navigator>
           </NavigationContainer>
         </AuthProvider>
-      </CommunityFeedProvider>
+      </CommunityProvider>
     </ConnectProvider>
   );
 }
