@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { ButtonGroup, Text } from "@rneui/themed";
 import { Context as AuthContext } from "../context/AuthContext";

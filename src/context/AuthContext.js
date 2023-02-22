@@ -38,13 +38,14 @@ const clearErrorMessage = (dispatch) => {
 };
 
 const signup = (dispatch) => {
-  return async ({ email, password, accountType, expoPushToken }) => {
+  return async ({ email, password, accountType, expoPushToken, username }) => {
     try {
       const response = await appApi.post("/signup", {
         email,
         password,
         accountType,
         expoPushToken,
+        username,
       });
       await AsyncStorage.setItem("token", response.data.token);
       dispatch({ type: "signin", payload: response.data.token });

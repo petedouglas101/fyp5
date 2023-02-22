@@ -12,6 +12,7 @@ const AuthForm = ({
 }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [expoPushToken, setExpoPushToken] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -31,6 +32,16 @@ const AuthForm = ({
           label="Email"
           value={email}
           onChangeText={(newEmail) => setEmail(newEmail)}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Input
+          style={styles.input}
+          label="Username"
+          value={username}
+          onChangeText={(newUsername) => setUsername(newUsername)}
           autoCapitalize="none"
           autoCorrect={false}
         />
@@ -59,7 +70,7 @@ const AuthForm = ({
         <Button
           title={submitButtonText}
           onPress={() =>
-            onSubmit({ email, password, accountType, expoPushToken })
+            onSubmit({ email, password, accountType, expoPushToken, username })
           }
         />
       </View>
