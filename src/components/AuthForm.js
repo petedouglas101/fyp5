@@ -20,7 +20,8 @@ const AuthForm = ({
 
   const { registerForPushNotificationsAsync } = useNotifications();
 
-  registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
+  // registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
+  setExpoPushToken(registerForPushNotificationsAsync());
 
   return (
     <>

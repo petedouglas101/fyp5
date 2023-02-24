@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { Button, ListItem } from "@rneui/themed";
 import { Context as ConnectContext } from "../context/ConnectContext";
+import * as RootNavigation from "../navigationRef";
 
 const ConnectScreen = () => {
   const [selectedVolunteer, setSelectedVolunteer] = useState({ _id: "" });
@@ -24,7 +25,8 @@ const ConnectScreen = () => {
               <TouchableOpacity
                 onPress={() => {
                   setSelectedVolunteer(item._id),
-                    sendPushNotification(selectedVolunteer);
+                    sendPushNotification(selectedVolunteer),
+                    RootNavigation.navigate("VideoCallScreen");
                 }}
               >
                 <ListItem>

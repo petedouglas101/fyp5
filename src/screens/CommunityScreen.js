@@ -39,7 +39,7 @@ const CommunityScreen = ({ navigation }) => {
             <CommunityPost
               post={item.content}
               date={item.date}
-              user={item.userId}
+              user={item.username}
             />
           );
         }}

@@ -15,6 +15,7 @@ import { Provider as AuthProvider } from "./src/context/AuthContext";
 import { Provider as CommunityProvider } from "./src/context/CommunityContext";
 import { Provider as ConnectProvider } from "./src/context/ConnectContext";
 import { navigationRef } from "./src/navigationRef";
+import * as RootNavigation from "../navigationRef";
 
 const AuthStack = createNativeStackNavigator();
 const MainFlowTabsNav = createBottomTabNavigator();
@@ -42,11 +43,11 @@ const MainFlowTabs = () => {
         component={AccountScreen}
         options={{ headerShown: false }}
       />
-      <MainFlowTabsNav.Screen
+      {/* <MainFlowTabsNav.Screen
         name="VideoCall"
         component={VideoCallScreen}
         options={{ headerShown: false }}
-      />
+      /> */}
     </MainFlowTabsNav.Navigator>
   );
 };
@@ -91,6 +92,7 @@ export default function App() {
       (response) => {
         console.log("Notification response received in App.js", response);
         //Bring user to the correct screen
+        RootNavigation.navigate("VideoCallScreen");
       }
     );
 
