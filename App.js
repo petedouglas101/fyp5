@@ -15,7 +15,6 @@ import { Provider as AuthProvider } from "./src/context/AuthContext";
 import { Provider as CommunityProvider } from "./src/context/CommunityContext";
 import { Provider as ConnectProvider } from "./src/context/ConnectContext";
 import { navigationRef } from "./src/navigationRef";
-import * as RootNavigation from "../navigationRef";
 
 const AuthStack = createNativeStackNavigator();
 const MainFlowTabsNav = createBottomTabNavigator();
@@ -43,11 +42,11 @@ const MainFlowTabs = () => {
         component={AccountScreen}
         options={{ headerShown: false }}
       />
-      {/* <MainFlowTabsNav.Screen
+      <MainFlowTabsNav.Screen
         name="VideoCall"
         component={VideoCallScreen}
         options={{ headerShown: false }}
-      /> */}
+      />
     </MainFlowTabsNav.Navigator>
   );
 };
@@ -66,17 +65,17 @@ export default function App() {
   const { registerForPushNotificationsAsync } = useNotifications();
 
   useEffect(() => {
+    console.log("App.js useEffect");
     registerForPushNotificationsAsync();
-    //Maybe this should be in the useNotifications hook and not in useEffect and maybe this should be called outside of the App component
-    // Notifications.setNotificationHandler({
-    //   handleNotification: async () => {
-    //     return {
-    //       shouldShowAlert: true,
-    //       shouldSetBadge: true,
-    //       shouldPlaySound: true,
-    //     };
-    //   },
-    // });
+    Notifications.setNotificationHandler({
+      handleNotification: async () => {
+        return {
+          shouldShowAlert: true,
+          shouldSetBadge: true,
+          shouldPlaySound: true,
+        };
+      },
+    });
 
     const subscription = Notifications.addNotificationReceivedListener(
       (notification) => {
@@ -110,6 +109,7 @@ export default function App() {
             <AuthStack.Navigator screenOptions={{ headerShown: false }}>
               <AuthStack.Screen name="Signup" component={SignupScreen} />
               <AuthStack.Screen name="Signin" component={SigninScreen} />
+              <AuthStack.Screen name="VideoCall" component={VideoCallScreen} />
               <AuthStack.Screen name="MainFlowTabs" component={MainFlowTabs} />
             </AuthStack.Navigator>
           </NavigationContainer>

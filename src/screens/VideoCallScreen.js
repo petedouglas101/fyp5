@@ -15,181 +15,41 @@ import { useMediaStreams } from "../hooks/useMediaStreams";
 import firestore from "@react-native-firebase/firestore";
 
 const VideoCallScreen = () => {
-  const configuration = {
+  const peerConstraints = {
     iceServers: [{ url: "stun:stun.l.google.com:19302" }],
   };
   const { getMediaStreams } = useMediaStreams();
   const [localStream, setLocalStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
   const [gettingCall, setGettingCall] = useState(false);
-  const peerConnection = new RTCPeerConnection(configuration);
+  let peerConnection = new RTCPeerConnection(peerConstraints);
   const connecting = useRef(false);
 
-  //   useEffect(() => {
-  //     const callRef = firestore().collection("meet").doc("chatId");
-  //     const subscribe = callRef.onSnapshot((snapshot) => {
-  //       if (snapshot.data().offer && !connecting.current) {
-  //         const data = snapshot.data();
-
-  //         if (
-  //           peerConnection &&
-  //           peerConnection.remoteDescription &&
-  //           data &&
-  //           data.answer
-  //         ) {
-  //           peerConnection.setRemoteDescription(
-  //             new RTCSessionDescription(data.answer)
-  //           );
-  //         }
-
-  //         if (data && data.offer && !connecting.current) {
-  //           setGettingCall(true);
-  //         }
-  //       }
-  //     });
-  //     const subscribeDelete = callRef
-  //       .collection("callee")
-  //       .onSnapshot((snapshot) => {
-  //         snapshot.docChanges().forEach((change) => {
-  //           if (change.type === "removed") {
-  //             hangup();
-  //           }
-  //         });
-  //       });
-
-  //     return () => {
-  //       subscribe();
-  //       subscribeDelete();
-  //     };
-  //   }, []);
-
   const setupWebRTC = async () => {
-    const stream = await getMediaStreams();
+    const localStream = await getMediaStreams();
     if (stream) {
-      console.log("stream", stream);
+      console.log("localStream", localStream);
       setLocalStream(stream);
-      peerConnection.addStream(stream);
+      peerConnection.addStream(localStream);
     }
     //Get remote stream once it is available
     peerConnection.addEventListener("addstream", (event) => {
       console.log("event", event.stream);
       setRemoteStream(event.stream);
     });
-
-    // peerConnection.onaddstream = (event) => {
-    //   setRemoteStream(event.stream);
-    // };
-  };
-  const hangup = async () => {
-    setGettingCall(false);
-    connecting.current = false;
-    streamCleanup();
-    firestoreCleanup();
-    if (peerConnection) {
-      peerConnection.close();
-    }
   };
 
-  const streamCleanup = async () => {
-    if (localStream) {
-      localStream.getTracks().forEach((track) => track.stop());
-      localStream.release();
-    }
-    setLocalStream(null);
-    setRemoteStream(null);
-  };
-  const firestoreCleanup = async () => {
-    const callRef = firestore().collection("meet").doc("chatId");
-
-    if (callRef) {
-      const calleeCandidates = await callRef.collection("callee").get();
-      calleeCandidates.forEach(async (candidate) => {
-        await candidate.ref.delete();
-      });
-
-      const callerCandidates = await callRef.collection("caller").get();
-      callerCandidates.forEach(async (candidate) => {
-        await candidate.ref.delete();
-      });
-
-      await callRef.delete();
-    }
-  };
-
-  const join = async () => {
-    console.log("joining");
-    connecting.current = true;
-    setGettingCall(false);
-
-    const callRef = firestore().collection("meet").doc("chatId");
-    const offer = (await callRef.get()).data().offer;
-
-    if (offer) {
-      await setupWebRTC();
-
-      //Exchange ICE candidates
-      collectIceCandidates(callRef, "callee", "caller");
-
-      if (peerConnection) {
-        await peerConnection.setRemoteDescription(
-          new RTCSessionDescription(offer)
-        );
-        const answer = await peerConnection.createAnswer();
-        await peerConnection.setLocalDescription(answer);
-        const callWithAnswer = {
-          answer: {
-            type: answer.type,
-            sdp: answer.sdp,
-          },
-        };
-        await callRef.update(callWithAnswer);
-      }
-    }
-  };
-
-  const create = async () => {
-    console.log("calling");
-    console.log("connecting", connecting.current);
-    console.log("peerConnection", peerConnection);
-    connecting.current = true;
-    await setupWebRTC();
-    const callRef = firestore().collection("meet").doc("chatId");
-    //Exchange ICE candidates between caller and callee
-    collectIceCandidates(callRef, "caller", "callee");
-
-    if (peerConnection) {
-      console.log("peerConnection", peerConnection);
-      const offer = await peerConnection.createOffer();
-      await peerConnection.setLocalDescription(offer);
-      const callWithOffer = { offer: { type: offer.type, sdp: offer.sdp } };
-      callRef.set({ callWithOffer });
-    }
-  };
-
-  //Helper function to exchange ICE candidates between caller and callee. Caller is local user and callee is remote user
-  const collectIceCandidates = async (callRef, caller, callee) => {
-    const candidatesCollection = callRef.collection(caller);
-    if (peerConnection) {
-      peerConnection.addEventListener("icecandidate", (event) => {
-        if (event.candidate) {
-          candidatesCollection.add({
-            userId: callee,
-            candidate: event.candidate,
-          });
-        }
-      });
+  const create = peerConnection.addEventListener("icecandidate", (event) => {
+    // When you find a null candidate then there are no more candidates.
+    // Gathering of candidates has finished.
+    if (!event.candidate) {
+      return;
     }
 
-    //get the ICE candidates added to firestore and update the peer connection
-    callRef.collection(callee).onSnapshot((snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
-          const candidate = new RTCIceCandidate(change.doc.data().candidate);
-          peerConnection.addIceCandidate(candidate);
-        }
-      });
-    });
-  };
+    // Send the event.candidate onto the person you're calling.
+    // Keeping to Trickle ICE Standards, you should send the candidates immediately.
+    console.log("ICE Candidate: ", event.candidate);
+  });
 
   return (
     <View style={styles.container}>

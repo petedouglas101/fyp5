@@ -11,7 +11,6 @@ const CommunityScreen = ({ navigation }) => {
   navigation.addListener("focus", () => {
     fetchPosts();
   });
-  console.log(state);
   return (
     <View style={styles.viewContainer}>
       <Text h2>Community</Text>
