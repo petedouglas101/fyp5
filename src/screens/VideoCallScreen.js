@@ -27,29 +27,96 @@ const VideoCallScreen = () => {
 
   const setupWebRTC = async () => {
     const localStream = await getMediaStreams();
-    if (stream) {
-      console.log("localStream", localStream);
+    if (localStream) {
       setLocalStream(stream);
       peerConnection.addStream(localStream);
     }
     //Get remote stream once it is available
     peerConnection.addEventListener("addstream", (event) => {
-      console.log("event", event.stream);
       setRemoteStream(event.stream);
     });
   };
 
-  const create = peerConnection.addEventListener("icecandidate", (event) => {
-    // When you find a null candidate then there are no more candidates.
-    // Gathering of candidates has finished.
-    if (!event.candidate) {
-      return;
-    }
+  const createCall = async () => {
+    await setupWebRTC();
+    const callRef = firestore().coolection("rooms").doc("room1");
+    exchangeICECandidates(callRef, "localCaller", "remoteCallee");
+  };
 
-    // Send the event.candidate onto the person you're calling.
-    // Keeping to Trickle ICE Standards, you should send the candidates immediately.
-    console.log("ICE Candidate: ", event.candidate);
+  const exchangeICECandidates = async (callRef, localCaller, remoteCallee) => {
+    const callDoc = await callRef.get();
+
+    const localCallerCandidatesCollection = callDoc.ref.collection(localCaller);
+
+    peerConnection.addEventListener("icecandidate", (event) => {
+      if (!event.candidate) {
+        console.log("Got final candidate!");
+        return;
+      }
+
+      localCallerCandidatesCollection.add(event.candidate.toJSON());
+    });
+
+    const remoteCalleeCandidatesCollection =
+      callDoc.ref.collection(remoteCallee);
+
+    remoteCalleeCandidatesCollection.onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach(async (change) => {
+        if (change.type === "added") {
+          let data = change.doc.data();
+          await peerConnection.addIceCandidate(new RTCIceCandidate(data));
+        }
+      });
+    });
+  };
+
+  //This will be called once the media stream has been added to the peer connection
+  peerConnection.addEventListener("negotiationneeded", (event) => {
+    // You can start the offer stages here.
+    // Be careful as this event can be called multiple times.
+    //Add method for creating the offer
+    createOffer();
   });
+
+  const createOffer = async () => {
+    // Create an offer to send to the person you're calling.
+    let sessionConstraints = {
+      mandatory: {
+        OfferToReceiveAudio: true,
+        OfferToReceiveVideo: true,
+        VoiceActivityDetection: true,
+      },
+    };
+
+    try {
+      const offerDescription = await peerConnection.createOffer(
+        sessionConstraints
+      );
+      await peerConnection.setLocalDescription(offerDescription);
+
+      // Send the offerDescription to the other participant.
+      // You can send this via a signalling server.
+      const roomWithOffer = {
+        offer: {
+          type: offerDescription.type,
+          sdp: offerDescription.sdp,
+        },
+      };
+
+      const roomRef = firestore().collection("rooms").doc("room1");
+      await roomRef.set(roomWithOffer);
+
+      roomRef.onSnapshot((snapshot) => {
+        const data = snapshot.data();
+        if (!peerConnection.currentRemoteDescription && data.answer) {
+          const answerDescription = new RTCSessionDescription(data.answer);
+          peerConnection.setRemoteDescription(answerDescription);
+        }
+      });
+    } catch (err) {
+      // Handle Errors
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -66,8 +133,9 @@ const VideoCallScreen = () => {
             hangup={hangup}
           />
         </View>
-      ) : null}
-      <CallButton iconName="video" backgroundColor="grey" onPress={create} />
+      ) : (
+        <CallButton iconName="video" backgroundColor="grey" onPress={create} />
+      )}
     </View>
   );
 };

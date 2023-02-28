@@ -42,11 +42,11 @@ const MainFlowTabs = () => {
         component={AccountScreen}
         options={{ headerShown: false }}
       />
-      <MainFlowTabsNav.Screen
+      {/* <MainFlowTabsNav.Screen
         name="VideoCall"
         component={VideoCallScreen}
         options={{ headerShown: false }}
-      />
+      /> */}
     </MainFlowTabsNav.Navigator>
   );
 };
@@ -109,7 +109,6 @@ export default function App() {
             <AuthStack.Navigator screenOptions={{ headerShown: false }}>
               <AuthStack.Screen name="Signup" component={SignupScreen} />
               <AuthStack.Screen name="Signin" component={SigninScreen} />
-              <AuthStack.Screen name="VideoCall" component={VideoCallScreen} />
               <AuthStack.Screen name="MainFlowTabs" component={MainFlowTabs} />
             </AuthStack.Navigator>
           </NavigationContainer>
