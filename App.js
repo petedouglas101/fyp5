@@ -42,11 +42,11 @@ const MainFlowTabs = () => {
         component={AccountScreen}
         options={{ headerShown: false }}
       />
-      {/* <MainFlowTabsNav.Screen
+      <MainFlowTabsNav.Screen
         name="VideoCall"
         component={VideoCallScreen}
         options={{ headerShown: false }}
-      /> */}
+      />
     </MainFlowTabsNav.Navigator>
   );
 };
