@@ -28,7 +28,6 @@ const sendPushNotification = (dispatch) => {
       const response = await appApi.post("/pushNotification", {
         volunteerId,
       });
-      console.log("response from server", response.data);
     } catch (err) {
       console.log(err);
     }

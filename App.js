@@ -65,7 +65,6 @@ export default function App() {
   const { registerForPushNotificationsAsync } = useNotifications();
 
   useEffect(() => {
-    console.log("App.js useEffect");
     registerForPushNotificationsAsync();
     Notifications.setNotificationHandler({
       handleNotification: async () => {
@@ -80,7 +79,6 @@ export default function App() {
     const subscription = Notifications.addNotificationReceivedListener(
       (notification) => {
         //This only listens to notifications received when app is in foreground, not if they are interacted with
-        console.log("Notification received in App.js", notification);
         //Maybe call handleNotificationResponse from useNotifications hook here
         //Can extract data from notification here
       }
@@ -89,7 +87,6 @@ export default function App() {
     //Called when a notification is interacted with
     const subscription2 = Notifications.addNotificationResponseReceivedListener(
       (response) => {
-        console.log("Notification response received in App.js", response);
         //Bring user to the correct screen
         RootNavigation.navigate("VideoCallScreen");
       }

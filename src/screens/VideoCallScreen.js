@@ -4,6 +4,7 @@ import {
   RTCPeerConnection,
   RTCIceCandidate,
   RTCSessionDescription,
+  MediaStream,
 } from "react-native-webrtc";
 import CallButton from "../components/CallButton";
 import GettingCall from "../components/GettingCall";
@@ -13,46 +14,73 @@ import firestore from "@react-native-firebase/firestore";
 
 const VideoCallScreen = () => {
   const peerConstraints = {
-    iceServers: [{ url: "stun:stun.l.google.com:19302" }],
+    iceServers: [
+      {
+        urls: ["stun:stun.l.google.com:19302", "stun:stun2.l.google.com:19302"],
+      },
+    ],
+    iceCandidatePoolSize: 10,
   };
   const { getMediaStreams } = useMediaStreams();
   const [localStream, setLocalStream] = useState(null);
-  const [remoteStream, setRemoteStream] = useState(null);
+  const [remoteStream, setRemoteStream] = useState(new MediaStream());
   const [gettingCall, setGettingCall] = useState(false);
-  let peerConnection = new RTCPeerConnection(peerConstraints);
+  const peerConnection = useRef(null);
 
-  const callRef = firestore().collection("calls");
+  // //Helper function. Put these in a hook maybe?
+  // async function setupWebRTC() {
+  //   peerConnection.current = new RTCPeerConnection(peerConstraints);
+  //   const localStream = await getMediaStreams();
+  //   setLocalStream(localStream);
+  //   localStream.getTracks().forEach((track) => {
+  //     peerConnection.current.addTrack(track, localStream);
+  //   });
+  //   //Get remote stream once it is available
+  //   peerConnection.current.addEventListener("track", (event) => {
+  //     event.streams[0].getTracks().forEach((track) => {
+  //       console.log("Add a track to the remoteStream:", track);
+  //       remoteStream.addTrack(track);
+  //     });
+  //   });
+  //   remoteStream.getTracks().forEach((track) => {
+  //     console.log("Add a track to the remoteStream:", track);
+  //     peerConnection.current.addTrack(track, remoteStream);
+  //   });
+  // }
 
-  //Helper function. Put these in a hook maybe?
-  async function setupWebRTC() {
+  const setupWebRTC = async () => {
+    peerConnection.current = new RTCPeerConnection(peerConstraints);
     const localStream = await getMediaStreams();
     setLocalStream(localStream);
-    //Get remote stream once it is available
-    peerConnection.addEventListener("addstream", (event) => {
-      peerConnection.addStream(localStream);
-      setRemoteStream(event.stream);
+    localStream.getTracks().forEach((track) => {
+      peerConnection.current.addTrack(track, localStream);
+      console.log("Add a track to the localStream:", track);
+      console.log("peerConnection.current", peerConnection.current);
     });
-  }
+
+    //Get remote stream once it is available
+    peerConnection.current.addEventListener("track", (event) => {
+      event.streams[0].getTracks().forEach((track) => {
+        console.log("Add a track to the remoteStream:", track);
+        remoteStream.addTrack(track);
+      });
+      remoteStream.getTracks().forEach((track) => {
+        console.log("Add a track to the peerConnection:", track);
+        peerConnection.current.addTrack(track, remoteStream);
+        console.log("remoteStream", remoteStream);
+      });
+    });
+  };
 
   const createCall = async () => {
     await setupWebRTC();
-    // const callRef = firestore().collection("rooms").doc("room1");
+    const callRef = firestore().collection("calls");
+
     exchangeICECandidates(callRef, "localCaller", "remoteCallee");
 
-    //Now create the offer and store it in the firestore document
-    let sessionConstraints = {
-      mandatory: {
-        OfferToReceiveAudio: true,
-        OfferToReceiveVideo: true,
-        VoiceActivityDetection: true,
-      },
-    };
-
     try {
-      const offerDescription = await peerConnection.createOffer(
-        sessionConstraints
-      );
-      await peerConnection.setLocalDescription(offerDescription);
+      const offerDescription = await peerConnection.current.createOffer();
+      await peerConnection.current.setLocalDescription(offerDescription);
 
       const callWithOffer = {
         offer: {
@@ -62,8 +90,8 @@ const VideoCallScreen = () => {
       };
 
       // Send the offerDescription to the other participant.
-      callRef.add(callWithOffer);
-      //This could be wrong
+      callRef.set(callWithOffer);
+      // exchangeICECandidates(callRef, "localCaller", "remoteCallee");
       setGettingCall(true);
     } catch (err) {
       // Handle Errors
@@ -71,78 +99,30 @@ const VideoCallScreen = () => {
   };
 
   //Helper function. Put in hook maybe?
-  async function exchangeICECandidates(callRef, localCaller, remoteCallee) {
+  const exchangeICECandidates = (callRef, localCaller, remoteCallee) => {
     //Adding new ICE candidates to collection in Firestore
-    const candidatesCollection = callRef.collection(localCaller);
+    const candidatesCollection = callRef.doc(localCaller);
 
-    peerConnection.addEventListener("icecandidate", (event) => {
-      if (!event.candidate) {
-        console.log("Got final candidate!");
-        return;
+    peerConnection.current.addEventListener("icecandidate", (event) => {
+      if (event.candidate) {
+        console.log("adding candidate", event.candidate);
+        candidatesCollection.set(event.candidate);
+        console.log("candidatesCollection", candidatesCollection);
       }
-      candidatesCollection.add(event.candidate.toJSON());
     });
 
-    //Get ICE candidates from firstore and add them to the PeerConnection
-    const remoteCalleeCandidatesCollection = callRef.collection(remoteCallee);
+    const remoteCandidatesCollection = callRef.doc(remoteCallee);
 
-    remoteCalleeCandidatesCollection.onSnapshot((snapshot) => {
+    remoteCandidatesCollection.onSnapshot((snapshot) => {
       snapshot.docChanges().forEach(async (change) => {
         if (change.type == "added") {
-          let candidate = change.doc.data();
-          await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+          const candidate = new RTCIceCandidate(change.doc.data());
+          console.log("adding remote candidate", candidate);
+          peerConnection.current.addIceCandidate(candidate);
         }
       });
     });
-  }
-
-  // //This will be called once the media stream has been added to the peer connection
-  // peerConnection.addEventListener("negotiationneeded", (event) => {
-  //   // You can start the offer stages here.
-  //   // Be careful as this event can be called multiple times.
-  //   //Add method for creating the offer
-  //   createOffer();
-  // });
-
-  // const createOffer = async () => {
-  //   // Create an offer to send to the person you're calling.
-  //   let sessionConstraints = {
-  //     mandatory: {
-  //       OfferToReceiveAudio: true,
-  //       OfferToReceiveVideo: true,
-  //       VoiceActivityDetection: true,
-  //     },
-  //   };
-
-  //   try {
-  //     const offerDescription = await peerConnection.createOffer(
-  //       sessionConstraints
-  //     );
-  //     await peerConnection.setLocalDescription(offerDescription);
-
-  //     // Send the offerDescription to the other participant.
-  //     // You can send this via a signalling server.
-  //     const roomWithOffer = {
-  //       offer: {
-  //         type: offerDescription.type,
-  //         sdp: offerDescription.sdp,
-  //       },
-  //     };
-
-  //     const roomRef = firestore().collection("rooms").doc("room1");
-  //     await roomRef.set(roomWithOffer);
-
-  //     roomRef.onSnapshot((snapshot) => {
-  //       const data = snapshot.data();
-  //       if (!peerConnection.currentRemoteDescription && data.answer) {
-  //         const answerDescription = new RTCSessionDescription(data.answer);
-  //         peerConnection.setRemoteDescription(answerDescription);
-  //       }
-  //     });
-  //   } catch (err) {
-  //     // Handle Errors
-  //   }
-  // };
+  };
 
   /** For disconnecting, close the connection, release the stream and delete the doc from firestore */
   const hangup = async () => {};
@@ -154,39 +134,31 @@ const VideoCallScreen = () => {
    */
   const join = async () => {
     console.log("Joining the call!");
+    const callRef = firestore().collection("calls");
     setGettingCall(false);
-    let sessionConstraints = {
-      mandatory: {
-        OfferToReceiveAudio: true,
-        OfferToReceiveVideo: true,
-        VoiceActivityDetection: true,
+
+    callRef.onSnapshot(async (snapshot) => {
+      const data = snapshot.data();
+      const offer = data.offer;
+      const receivedOfferDescription = new RTCSessionDescription(offer);
+      await peerConnection.current.setRemoteDescription(
+        receivedOfferDescription
+      );
+      //Create the answer and update the firestore document with the answer
+      const answerDescription = await peerConnection.current.createAnswer();
+
+      await peerConnection.current.setLocalDescription(answerDescription);
+    });
+
+    const callWithAnswer = {
+      answer: {
+        type: peerConnection.current.localDescription.type,
+        sdp: peerConnection.current.localDescription.sdp,
       },
     };
+
+    callRef.update(callWithAnswer);
     exchangeICECandidates(callRef, "remoteCallee", "localCaller");
-    try {
-      const receivedOfferDescription = new RTCSessionDescription(
-        callRef.get().data().offer
-      );
-      await peerConnection.setRemoteDescription(receivedOfferDescription);
-
-      //Create the answer and update the firestore document with the answer
-      const answerDescription = await peerConnection.createAnswer(
-        sessionConstraints
-      );
-
-      await peerConnection.setLocalDescription(answerDescription);
-
-      const callWithAnswer = {
-        answer: {
-          type: answerDescription.type,
-          sdp: answerDescription.sdp,
-        },
-      };
-
-      callRef.update(callWithAnswer);
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   return (
