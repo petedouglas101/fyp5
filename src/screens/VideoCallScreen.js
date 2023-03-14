@@ -27,6 +27,8 @@ const VideoCallScreen = () => {
   const [gettingCall, setGettingCall] = useState(false);
   const peerConnection = useRef(null);
 
+  console.log("Remote Stream when VideoCallScreen is rendered: ", remoteStream);
+
   useEffect(() => {
     console.log("useEffectCalled");
     const cRef = firestore().collection("calls").doc("call1");
@@ -77,11 +79,12 @@ const VideoCallScreen = () => {
 
     //Get remote stream once it is available. This may need to be changed to a listener. It may also need to be moved out of this function
     peerConnection.current.ontrack = ({ track, streams }) => {
-      if (remoteStream) {
+      if (remoteStream._tracks.length > 0) {
         return;
       }
       //There may be more than one stream. This is just the first one
       setRemoteStream(streams[0]);
+      console.log("Remote stream: ", remoteStream);
     };
 
     // //it may also look like this
