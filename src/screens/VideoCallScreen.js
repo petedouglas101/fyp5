@@ -26,6 +26,7 @@ const VideoCallScreen = () => {
   const [remoteStream, setRemoteStream] = useState(new MediaStream());
   const [gettingCall, setGettingCall] = useState(false);
   const peerConnection = useRef(null);
+  const connecting = useRef(false);
 
   useEffect(() => {
     const cRef = firestore().collection("calls").doc("call1");
@@ -41,7 +42,8 @@ const VideoCallScreen = () => {
           peerConnection.current.setRemoteDescription(answerDescription);
         }
 
-        if (data && data.offer) {
+        if (data && data.offer && !connecting.current) {
+          console.log("getting call is being set to true");
           setGettingCall(true);
         }
       });
@@ -70,6 +72,7 @@ const VideoCallScreen = () => {
   };
 
   const createCall = async () => {
+    connecting.current = true;
     await setupWebRTC();
     const callRef = firestore().collection("calls").doc("call1");
 
@@ -87,6 +90,18 @@ const VideoCallScreen = () => {
       };
       callRef.set(callWithOffer);
     } catch (err) {}
+
+    peerConnection.current.iceconnectionstatechange = (event) => {
+      switch (peerConnection.current.iceConnectionState) {
+        case "connected":
+          // You can handle the call being connected here.
+          // Like setting the video streams to visible.
+          setGettingCall(false);
+          break;
+        case "completed":
+          break;
+      }
+    };
   };
 
   //
@@ -112,9 +127,13 @@ const VideoCallScreen = () => {
   };
 
   /** For disconnecting, close the connection, release the stream and delete the doc from firestore */
-  const hangup = async () => {};
+  const hangup = async () => {
+    connecting.current = false;
+    setGettingCall(false);
+  };
 
   const join = async () => {
+    connecting.current = true;
     setGettingCall(false);
     setupWebRTC();
     const callRef = firestore().collection("calls").doc("call1");
