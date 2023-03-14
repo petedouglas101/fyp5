@@ -27,10 +27,7 @@ const VideoCallScreen = () => {
   const [gettingCall, setGettingCall] = useState(false);
   const peerConnection = useRef(null);
 
-  console.log("Remote Stream when VideoCallScreen is rendered: ", remoteStream);
-
   useEffect(() => {
-    console.log("useEffectCalled");
     const cRef = firestore().collection("calls").doc("call1");
     cRef.onSnapshot((snapshot) => {
       const subscribe = cRef.onSnapshot((snapshot) => {
@@ -42,19 +39,10 @@ const VideoCallScreen = () => {
         ) {
           const answerDescription = new RTCSessionDescription(data.answer);
           peerConnection.current.setRemoteDescription(answerDescription);
-        } else {
-          console.log(
-            "Peer connection not set. There was an error in useEffect"
-          );
         }
 
         if (data && data.offer) {
           setGettingCall(true);
-          console.log("Getting call has been set to: ", gettingCall);
-        } else {
-          console.log(
-            "No offer in firestore setGettingCall is not true. Error found in useEffect"
-          );
         }
       });
 
@@ -63,47 +51,29 @@ const VideoCallScreen = () => {
   }, []);
 
   const setupWebRTC = async () => {
-    console.log("Setting up WebRTC");
     peerConnection.current = new RTCPeerConnection(peerConstraints);
     const localStream = await getMediaStreams();
     try {
       localStream.getTracks().forEach((track) => {
-        console.log("Adding local track to peer connection");
         peerConnection.current.addTrack(track, localStream);
       });
 
       setLocalStream(localStream);
-    } catch (err) {
-      console.log("Error adding local track to peer connection: ", err);
-    }
+    } catch (err) {}
 
-    //Get remote stream once it is available. This may need to be changed to a listener. It may also need to be moved out of this function
     peerConnection.current.ontrack = ({ track, streams }) => {
       if (remoteStream._tracks.length > 0) {
         return;
       }
-      //There may be more than one stream. This is just the first one
       setRemoteStream(streams[0]);
-      console.log("Remote stream: ", remoteStream);
     };
-
-    // //it may also look like this
-    // peerConnection.current.ontrack = (event) => {
-    //   event.streams[0].getTracks().forEach((track) => {
-    //     remoteStream.addTrack(track);
-    //   });
-    //   setRemoteStream(remoteStream);
-    // };
   };
 
   const createCall = async () => {
-    console.log("Creating the call!");
     await setupWebRTC();
     const callRef = firestore().collection("calls").doc("call1");
 
     exchangeICECandidates(callRef, "localCaller", "remoteCallee");
-
-    //This may need to be inside a negotiationneeded event listener and put outside this meyhod
 
     try {
       const offerDescription = await peerConnection.current.createOffer();
@@ -116,16 +86,11 @@ const VideoCallScreen = () => {
         },
       };
       callRef.set(callWithOffer);
-    } catch (err) {
-      // Handle Errors
-      console.log("Error creating offer: ", err);
-    }
+    } catch (err) {}
   };
 
   //
   const exchangeICECandidates = (callRef, localCaller, remoteCallee) => {
-    console.log("Exchanging ICE candidates!");
-    //Adding new ICE candidates to collection in Firestore
     const candidatesCollection = callRef.collection(localCaller);
 
     peerConnection.current.addEventListener("icecandidate", (event) => {
@@ -149,31 +114,10 @@ const VideoCallScreen = () => {
   /** For disconnecting, close the connection, release the stream and delete the doc from firestore */
   const hangup = async () => {};
 
-  /**
-   * This method is called when the remote callee presses the answer button. It exchanges the ICE
-   * candidates, gets the offer from firestore, adds it to the peer connection. It then
-   * creates the answer and updates the firestore document with the answer
-   */
   const join = async () => {
-    console.log("Joining the call!");
     setGettingCall(false);
     setupWebRTC();
     const callRef = firestore().collection("calls").doc("call1");
-
-    // callRef.onSnapshot(async (snapshot) => {
-    //   const data = snapshot.data();
-    //   const offer = data.offer;
-    //   if (offer) {
-    //     exchangeICECandidates(callRef, "remoteCallee", "localCaller");
-    //     await peerConnection.current.setRemoteDescription(
-    //       new RTCSessionDescription(offer)
-    //     );
-    //     //Create the answer and update the firestore document with the answer
-    //     const answerDescription = await peerConnection.current.createAnswer();
-
-    //     await peerConnection.current.setLocalDescription(answerDescription);
-    //   }
-    // });
 
     const callData = (await callRef.get()).data();
 

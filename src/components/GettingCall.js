@@ -11,7 +11,7 @@ const GettingCall = ({ hangup, join }) => {
       <View style={styles.buttonContainer}>
         <CallButton
           iconName="phone"
-          backgroundColor="blue"
+          backgroundColor="green"
           onPress={join}
           style={{ marginRight: 30 }}
         />
