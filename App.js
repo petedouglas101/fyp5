@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -38,7 +39,10 @@ const MainFlowTabs = () => {
           return <Icon name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: "#6699CC",
-        tabBarInactiveTintColor: "#5A5A5A",
+        tabBarInactiveTintColor: "#D3D3D3",
+        tabBarStyle: {
+          backgroundColor: "#36454F",
+        },
       })}
     >
       <MainFlowTabsNav.Screen

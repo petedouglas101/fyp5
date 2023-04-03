@@ -49,13 +49,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flex: 1,
     justifyContent: "center",
+    backgroundColor: "#5A5A5A",
   },
 
   button: {
     width: 100,
     height: 100,
     borderRadius: 100,
-    backgroundColor: "orange",
+    backgroundColor: "#6699CC",
     alignSelf: "center",
   },
 });
