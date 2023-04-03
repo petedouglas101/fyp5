@@ -8,12 +8,12 @@ import SignupScreen from "./src/screens/SignupScreen";
 import SigninScreen from "./src/screens/SigninScreen";
 import AccountScreen from "./src/screens/AccountScreen";
 import CommunityScreen from "./src/screens/CommunityScreen";
-import ConnectScreen from "./src/screens/ConnectScreen";
+import SupportScreen from "./src/screens/SupportScreen";
 import TrackerScreen from "./src/screens/TrackerScreen";
 import VideoCallScreen from "./src/screens/VideoCallScreen";
 import { Provider as AuthProvider } from "./src/context/AuthContext";
 import { Provider as CommunityProvider } from "./src/context/CommunityContext";
-import { Provider as ConnectProvider } from "./src/context/ConnectContext";
+import { Provider as SupportProvider } from "./src/context/SupportContext";
 import { navigationRef } from "./src/navigationRef";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
@@ -28,7 +28,7 @@ const MainFlowTabs = () => {
           let iconName;
           if (route.name === "Community") {
             iconName = "users";
-          } else if (route.name === "Connect") {
+          } else if (route.name === "Support") {
             iconName = "handshake";
           } else if (route.name === "Tracker") {
             iconName = "heartbeat";
@@ -37,8 +37,8 @@ const MainFlowTabs = () => {
           }
           return <Icon name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "orange",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: "#6699CC",
+        tabBarInactiveTintColor: "#5A5A5A",
       })}
     >
       <MainFlowTabsNav.Screen
@@ -47,8 +47,8 @@ const MainFlowTabs = () => {
         options={{ headerShown: false }}
       />
       <MainFlowTabsNav.Screen
-        name="Connect"
-        component={ConnectScreen}
+        name="Support"
+        component={SupportScreen}
         options={{ headerShown: false }}
       />
       <MainFlowTabsNav.Screen
@@ -118,7 +118,7 @@ export default function App() {
   }, []);
 
   return (
-    <ConnectProvider>
+    <SupportProvider>
       <CommunityProvider>
         <AuthProvider>
           <NavigationContainer ref={navigationRef}>
@@ -130,6 +130,6 @@ export default function App() {
           </NavigationContainer>
         </AuthProvider>
       </CommunityProvider>
-    </ConnectProvider>
+    </SupportProvider>
   );
 }

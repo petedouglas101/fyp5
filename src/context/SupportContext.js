@@ -1,7 +1,7 @@
 import createDataContext from "./createDataContext";
 import appApi from "../api/server";
 
-const connectReducer = (state, action) => {
+const supportReducer = (state, action) => {
   switch (action.type) {
     case "fetch_volunteers":
       return action.payload;
@@ -35,7 +35,7 @@ const sendPushNotification = (dispatch) => {
 };
 
 export const { Context, Provider } = createDataContext(
-  connectReducer,
+  supportReducer,
   { fetchAvailableVolunteers, sendPushNotification },
   { volunteers: [] }
 );

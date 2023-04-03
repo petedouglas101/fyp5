@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { Button, ListItem } from "@rneui/themed";
-import { Context as ConnectContext } from "../context/ConnectContext";
+import { Context as SupportContext } from "../context/SupportContext";
 import * as RootNavigation from "../navigationRef";
 
 const ConnectScreen = () => {
   const [selectedVolunteer, setSelectedVolunteer] = useState({ _id: "" });
   const { state, fetchAvailableVolunteers, sendPushNotification } =
-    useContext(ConnectContext);
+    useContext(SupportContext);
 
   return (
     <View style={styles.root}>

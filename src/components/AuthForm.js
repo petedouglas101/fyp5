@@ -74,6 +74,7 @@ const AuthForm = ({
           onPress={() =>
             onSubmit({ email, password, accountType, expoPushToken, username })
           }
+          color={"#6699CC"}
         />
       </View>
     </>

@@ -24,6 +24,7 @@ const CommunityScreen = ({ navigation }) => {
       />
       <Button
         title="Post"
+        color={"#6699CC"}
         onPress={() => {
           createPost({ content });
           setContent("");
