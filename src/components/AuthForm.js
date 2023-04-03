@@ -36,16 +36,18 @@ const AuthForm = ({
           autoCorrect={false}
         />
       </View>
-      <View style={styles.inputContainer}>
-        <Input
-          style={styles.input}
-          label="Username"
-          value={username}
-          onChangeText={(newUsername) => setUsername(newUsername)}
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-      </View>
+      {SignupScreen ? (
+        <View style={styles.inputContainer}>
+          <Input
+            style={styles.input}
+            label="Username"
+            value={username}
+            onChangeText={(newUsername) => setUsername(newUsername)}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+        </View>
+      ) : null}
       <View style={styles.inputContainer}>
         <Input
           secureTextEntry

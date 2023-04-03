@@ -15,13 +15,32 @@ import { Provider as AuthProvider } from "./src/context/AuthContext";
 import { Provider as CommunityProvider } from "./src/context/CommunityContext";
 import { Provider as ConnectProvider } from "./src/context/ConnectContext";
 import { navigationRef } from "./src/navigationRef";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 const AuthStack = createNativeStackNavigator();
 const MainFlowTabsNav = createBottomTabNavigator();
 
 const MainFlowTabs = () => {
   return (
-    <MainFlowTabsNav.Navigator>
+    <MainFlowTabsNav.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === "Community") {
+            iconName = "users";
+          } else if (route.name === "Connect") {
+            iconName = "handshake";
+          } else if (route.name === "Tracker") {
+            iconName = "heartbeat";
+          } else if (route.name === "Account") {
+            iconName = "user";
+          }
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: "orange",
+        tabBarInactiveTintColor: "gray",
+      })}
+    >
       <MainFlowTabsNav.Screen
         name="Community"
         component={CommunityScreen}
@@ -42,11 +61,11 @@ const MainFlowTabs = () => {
         component={AccountScreen}
         options={{ headerShown: false }}
       />
-      <MainFlowTabsNav.Screen
+      {/* <MainFlowTabsNav.Screen
         name="VideoCall"
         component={VideoCallScreen}
         options={{ headerShown: false }}
-      />
+      /> */}
     </MainFlowTabsNav.Navigator>
   );
 };
