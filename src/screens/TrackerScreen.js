@@ -2,6 +2,16 @@ import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 
 const TrackerScreen = () => {
+
+    //On press of button, start tracking time
+    function setTimeout(() => {
+        
+    }, timeout);{
+        //set start time
+        //set end time
+        //set time difference
+        //set time difference to state
+    }
   return (
     <View style={styles.root}>
       <Button
