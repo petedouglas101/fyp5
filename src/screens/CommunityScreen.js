@@ -8,7 +8,19 @@ const CommunityScreen = ({ navigation }) => {
   const [content, setContent] = useState("");
   const { state, createPost, fetchPosts } = useContext(CommunityContext);
 
-  console.log(state);
+  console.log("OriginalState", state);
+
+  function reverseArray(arr) {
+    for (let i = 0; i < Math.floor(arr.length / 2); i++) {
+      const temp = arr[i];
+      arr[i] = arr[arr.length - 1 - i];
+      arr[arr.length - 1 - i] = temp;
+    }
+    return arr;
+  }
+
+  const sortedArr = reverseArray(state);
+  console.log("SortedArray", sortedArr);
 
   navigation.addListener("focus", () => {
     fetchPosts();
@@ -37,10 +49,11 @@ const CommunityScreen = ({ navigation }) => {
       <View style={styles.postContainer}>
         {/* Generate a FlatList of posts, using the data from the CommunityContext fetch_posts action. Generate a key for each post */}
         <FlatList
-          data={state}
+          data={sortedArr}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => {
             return (
+              //Order by date
               <View>
                 <CommunityPost
                   post={item.content}
