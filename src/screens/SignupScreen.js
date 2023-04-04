@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { ButtonGroup, Text } from "@rneui/themed";
+import { Text } from "@rneui/themed";
 import { Context as AuthContext } from "../context/AuthContext";
 import AuthForm from "../components/AuthForm";
 
@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     marginBottom: 200,
+    backgroundColor: "#36454F",
   },
   link: {
     color: "blue",

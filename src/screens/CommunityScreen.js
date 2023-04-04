@@ -12,44 +12,48 @@ const CommunityScreen = ({ navigation }) => {
     fetchPosts();
   });
   return (
-    <View style={styles.viewContainer}>
+    <View style={styles.rootContainer}>
       <Text h2>Community</Text>
-      <TextInput
-        style={styles.input}
-        multiline={true}
-        numberOfLines={4}
-        value={content}
-        onChangeText={(newContent) => setContent(newContent)}
-        placeholder="What's on your mind?"
-      />
-      <Button
-        title="Post"
-        color={"#6699CC"}
-        onPress={() => {
-          createPost({ content });
-          setContent("");
-        }}
-      />
-      {/* Generate a FlatList of posts, using the data from the CommunityContext fetch_posts action. Generate a key for each post */}
-      <FlatList
-        data={state}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => {
-          return (
-            <CommunityPost
-              post={item.content}
-              date={item.date}
-              user={item.username}
-            />
-          );
-        }}
-      />
+      <View style={styles.postInputContainer}>
+        <TextInput
+          style={styles.input}
+          multiline={true}
+          numberOfLines={4}
+          value={content}
+          onChangeText={(newContent) => setContent(newContent)}
+          placeholder="What's on your mind?"
+        />
+        <Button
+          title="Post"
+          color={"#6699CC"}
+          onPress={() => {
+            createPost({ content });
+            setContent("");
+          }}
+        />
+      </View>
+      <View style={styles.postContainer}>
+        {/* Generate a FlatList of posts, using the data from the CommunityContext fetch_posts action. Generate a key for each post */}
+        <FlatList
+          data={state}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => {
+            return (
+              <CommunityPost
+                post={item.content}
+                date={item.date}
+                user={item.username}
+              />
+            );
+          }}
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  viewContainer: {
+  rootContainer: {
     flex: 1,
     marginTop: 25,
   },
@@ -59,7 +63,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     margin: (10, 10, 0, 10),
   },
-  input: {
+  postInputContainer: {
     borderWidth: 1,
     borderColor: "red",
     borderRadius: 5,
