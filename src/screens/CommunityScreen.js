@@ -8,6 +8,8 @@ const CommunityScreen = ({ navigation }) => {
   const [content, setContent] = useState("");
   const { state, createPost, fetchPosts } = useContext(CommunityContext);
 
+  console.log(state);
+
   navigation.addListener("focus", () => {
     fetchPosts();
   });
@@ -39,11 +41,13 @@ const CommunityScreen = ({ navigation }) => {
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => {
             return (
-              <CommunityPost
-                post={item.content}
-                date={item.date}
-                user={item.username}
-              />
+              <View>
+                <CommunityPost
+                  post={item.content}
+                  date={item.date}
+                  user={item.username}
+                />
+              </View>
             );
           }}
         />
