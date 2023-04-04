@@ -8,13 +8,11 @@ const CommunityScreen = ({ navigation }) => {
   const [content, setContent] = useState("");
   const { state, createPost, fetchPosts } = useContext(CommunityContext);
 
-  console.log("OriginalState", state);
-
   function sortByDate(a, b) {
     return new Date(b.date) - new Date(a.date);
   }
 
-  state.sort(sortByDate);
+  const sortedPosts = state.sort(sortByDate);
 
   navigation.addListener("focus", () => {
     fetchPosts();
@@ -41,13 +39,11 @@ const CommunityScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.postContainer}>
-        {/* Generate a FlatList of posts, using the data from the CommunityContext fetch_posts action. Generate a key for each post */}
         <FlatList
-          data={state}
+          data={sortedPosts}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => {
             return (
-              //Order by date
               <View>
                 <CommunityPost
                   post={item.content}
@@ -79,6 +75,9 @@ const styles = StyleSheet.create({
     borderColor: "red",
     borderRadius: 5,
     margin: (10, 10, 0, 10),
+  },
+  input: {
+    paddingLeft: 5,
   },
 });
 
