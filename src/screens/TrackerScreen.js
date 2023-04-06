@@ -1,14 +1,21 @@
-import React from "react";
+import React, { useRef } from "react";
 import { View, StyleSheet, Button } from "react-native";
 import Timer from "react-native-background-timer-android";
-import { Platform } from "react-native";
 
 const TrackerScreen = () => {
-  // const timerInterval = 200; // 24 hours in milliseconds
-  const startTracking = Timer.setInterval(() => console.log("tic"), 500);
+  const startTrackingRef = useRef(null);
 
-  // Timer.clearInterval(startTracking);
-  // console.log(Platform);
+  const startTracking = () => {
+    startTrackingRef.current = Timer.setInterval(
+      () => console.log("tic"),
+      2000
+    );
+  };
+
+  const stopTracking = () => {
+    Timer.clearInterval(startTrackingRef.current);
+    console.log("stopped");
+  };
 
   return (
     <View style={styles.root}>
@@ -17,7 +24,11 @@ const TrackerScreen = () => {
         buttonStyle={styles.button}
         onPress={startTracking}
       />
-      <Button title="Start Tracking" buttonStyle={styles.button} />
+      <Button
+        title="Stop Tracking"
+        buttonStyle={styles.button}
+        onPress={stopTracking}
+      />
     </View>
   );
 };
