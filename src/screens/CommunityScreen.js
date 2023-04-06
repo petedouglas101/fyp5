@@ -65,14 +65,14 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
   postContainer: {
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: "red",
     borderRadius: 5,
     margin: (10, 10, 0, 10),
   },
   postInputContainer: {
     borderWidth: 1,
-    borderColor: "red",
+    borderColor: "#cccccc",
     borderRadius: 5,
     margin: (10, 10, 0, 10),
   },
