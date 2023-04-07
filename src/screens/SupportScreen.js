@@ -26,14 +26,14 @@ const ConnectScreen = () => {
                 onPress={() => {
                   setSelectedVolunteer(item._id),
                     sendPushNotification(selectedVolunteer),
-                    RootNavigation.navigate("VideoCallScreen");
+                    RootNavigation.navigate("VideoCall");
                 }}
               >
                 <ListItem>
                   <ListItem.Content>
-                    <ListItem.Title>{item.email}</ListItem.Title>
+                    <ListItem.Title>{item.username}</ListItem.Title>
                   </ListItem.Content>
-                  {/* <ListItem.Chevron /> */}
+                  <ListItem.Chevron />
                 </ListItem>
               </TouchableOpacity>
             );
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     backgroundColor: "#6699CC",
     alignSelf: "center",
+    elevation: 5,
   },
 });
 

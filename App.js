@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -65,11 +64,6 @@ const MainFlowTabs = () => {
         component={AccountScreen}
         options={{ headerShown: false }}
       />
-      {/* <MainFlowTabsNav.Screen
-        name="VideoCall"
-        component={VideoCallScreen}
-        options={{ headerShown: false }}
-      /> */}
     </MainFlowTabsNav.Navigator>
   );
 };
@@ -129,6 +123,7 @@ export default function App() {
             <AuthStack.Navigator screenOptions={{ headerShown: false }}>
               <AuthStack.Screen name="Signup" component={SignupScreen} />
               <AuthStack.Screen name="Signin" component={SigninScreen} />
+              <AuthStack.Screen name="VideoCall" component={VideoCallScreen} />
               <AuthStack.Screen name="MainFlowTabs" component={MainFlowTabs} />
             </AuthStack.Navigator>
           </NavigationContainer>
