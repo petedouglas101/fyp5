@@ -11,6 +11,7 @@ import CommunityScreen from "./src/screens/CommunityScreen";
 import SupportScreen from "./src/screens/SupportScreen";
 import TrackerScreen from "./src/screens/TrackerScreen";
 import VideoCallScreen from "./src/screens/VideoCallScreen";
+import VolunteerScreen from "./src/screens/VolunteerScreen";
 import { Provider as AuthProvider } from "./src/context/AuthContext";
 import { Provider as CommunityProvider } from "./src/context/CommunityContext";
 import { Provider as SupportProvider } from "./src/context/SupportContext";
@@ -19,6 +20,8 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 
 const AuthStack = createNativeStackNavigator();
 const MainFlowTabsNav = createBottomTabNavigator();
+
+const RootNavigation = navigationRef;
 
 const MainFlowTabs = () => {
   return (
@@ -105,7 +108,7 @@ export default function App() {
     const subscription2 = Notifications.addNotificationResponseReceivedListener(
       (response) => {
         //Bring user to the correct screen
-        RootNavigation.navigate("VideoCallScreen");
+        RootNavigation.navigate("VideoCall");
       }
     );
 
@@ -120,10 +123,11 @@ export default function App() {
       <CommunityProvider>
         <AuthProvider>
           <NavigationContainer ref={navigationRef}>
-            <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+            <AuthStack.Navigator>
               <AuthStack.Screen name="Signup" component={SignupScreen} />
               <AuthStack.Screen name="Signin" component={SigninScreen} />
               <AuthStack.Screen name="VideoCall" component={VideoCallScreen} />
+              <AuthStack.Screen name="Volunteer" component={VolunteerScreen} />
               <AuthStack.Screen name="MainFlowTabs" component={MainFlowTabs} />
             </AuthStack.Navigator>
           </NavigationContainer>

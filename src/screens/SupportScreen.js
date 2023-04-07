@@ -3,6 +3,7 @@ import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { Button, ListItem } from "@rneui/themed";
 import { Context as SupportContext } from "../context/SupportContext";
 import * as RootNavigation from "../navigationRef";
+import { color } from "@rneui/base";
 
 const ConnectScreen = () => {
   const [selectedVolunteer, setSelectedVolunteer] = useState({ _id: "" });
@@ -26,12 +27,17 @@ const ConnectScreen = () => {
                 onPress={() => {
                   setSelectedVolunteer(item._id),
                     sendPushNotification(selectedVolunteer),
-                    RootNavigation.navigate("VideoCall");
+                    RootNavigation.navigate("Volunteer");
                 }}
               >
-                <ListItem>
+                <ListItem style={styles.listItem}>
                   <ListItem.Content>
-                    <ListItem.Title>{item.username}</ListItem.Title>
+                    <ListItem.Title style={styles.title}>
+                      {item.username}
+                    </ListItem.Title>
+                    <ListItem.Subtitle style={styles.subtitle}>
+                      {item.isOnline ? "Available" : "Unavailable"}
+                    </ListItem.Subtitle>
                   </ListItem.Content>
                   <ListItem.Chevron />
                 </ListItem>
@@ -59,6 +65,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#6699CC",
     alignSelf: "center",
     elevation: 5,
+    marginBottom: 20,
+  },
+  subtitle: {
+    fontSize: 11,
+    color: "red",
+    marginTop: 3,
+  },
+  title: {
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  listItem: {
+    borderBottomColor: "#cccccc",
+    borderBottomWidth: 1,
   },
 });
 
