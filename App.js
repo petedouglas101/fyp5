@@ -124,7 +124,13 @@ export default function App() {
       <CommunityProvider>
         <AuthProvider>
           <NavigationContainer ref={navigationRef}>
-            <AuthStack.Navigator>
+            <AuthStack.Navigator
+              screenOptions={{
+                headerStyle: { backgroundColor: "#6699CC" },
+                contentStyle: { backgroundColor: "#5A5A5A" },
+                headerTintColor: "#36454F",
+              }}
+            >
               <AuthStack.Screen name="Signup" component={SignupScreen} />
               <AuthStack.Screen name="Signin" component={SigninScreen} />
               <AuthStack.Screen

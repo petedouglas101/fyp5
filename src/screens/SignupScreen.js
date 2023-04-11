@@ -14,7 +14,6 @@ const SignupScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <AuthForm
-        headerText="Sign Up for iSober"
         errorMessage={state.errorMessage}
         submitButtonText="Sign Up"
         onSubmit={signup}
@@ -36,7 +35,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     marginBottom: 200,
-    backgroundColor: "#36454F",
   },
   link: {
     color: "blue",

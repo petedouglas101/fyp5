@@ -4,7 +4,6 @@ import { Text, Input, Button, ButtonGroup } from "@rneui/themed";
 import { useNotifications } from "../hooks/useNotifications";
 
 const AuthForm = ({
-  headerText,
   errorMessage,
   onSubmit,
   submitButtonText,
@@ -24,38 +23,36 @@ const AuthForm = ({
 
   return (
     <>
-      <Text h4>{headerText}</Text>
-
       <View style={styles.inputContainer}>
         <Input
           style={styles.input}
-          label="Email"
           value={email}
           onChangeText={(newEmail) => setEmail(newEmail)}
           autoCapitalize="none"
           autoCorrect={false}
+          placeholder="Email"
         />
       </View>
       {SignupScreen ? (
         <View style={styles.inputContainer}>
           <Input
             style={styles.input}
-            label="Username"
             value={username}
             onChangeText={(newUsername) => setUsername(newUsername)}
             autoCapitalize="none"
             autoCorrect={false}
+            placeholder="Username"
           />
         </View>
       ) : null}
       <View style={styles.inputContainer}>
         <Input
           secureTextEntry
-          label="Password"
           value={password}
           onChangeText={(newPassword) => setPassword(newPassword)}
           autoCapitalize="none"
           autoCorrect={false}
+          placeholder="Password"
         />
       </View>
       {errorMessage ? (
@@ -83,9 +80,6 @@ const AuthForm = ({
 
 const styles = StyleSheet.create({
   inputContainer: {
-    borderWidth: 1,
-    borderColor: "d3d3d3",
-    borderRadius: 5,
     margin: (10, 10, 0, 10),
   },
   buttonView: {
