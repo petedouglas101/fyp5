@@ -45,6 +45,7 @@ const MainFlowTabs = () => {
         tabBarStyle: {
           backgroundColor: "#36454F",
         },
+        headerShown: false,
       })}
     >
       <MainFlowTabsNav.Screen
@@ -126,9 +127,13 @@ export default function App() {
             <AuthStack.Navigator>
               <AuthStack.Screen name="Signup" component={SignupScreen} />
               <AuthStack.Screen name="Signin" component={SigninScreen} />
-              <AuthStack.Screen name="VideoCall" component={VideoCallScreen} />
+              <AuthStack.Screen
+                name="MainFlowTabs"
+                component={MainFlowTabs}
+                options={{ headerShown: false }}
+              />
               <AuthStack.Screen name="Volunteer" component={VolunteerScreen} />
-              <AuthStack.Screen name="MainFlowTabs" component={MainFlowTabs} />
+              <AuthStack.Screen name="VideoCall" component={VideoCallScreen} />
             </AuthStack.Navigator>
           </NavigationContainer>
         </AuthProvider>

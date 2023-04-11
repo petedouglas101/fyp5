@@ -5,10 +5,17 @@ import { Context as SupportContext } from "../context/SupportContext";
 import * as RootNavigation from "../navigationRef";
 import { color } from "@rneui/base";
 
-const ConnectScreen = () => {
+const SupportScreen = () => {
   const [selectedVolunteer, setSelectedVolunteer] = useState({ _id: "" });
   const { state, fetchAvailableVolunteers, sendPushNotification } =
     useContext(SupportContext);
+
+  // //sorts volunteers by online status
+  // function sortByOnline(a, b) {
+  //   return b.isOnline - a.isOnline;
+  // }
+
+  // const sortedVolunteers = state.sort(sortByOnline);
 
   return (
     <View style={styles.root}>
@@ -25,9 +32,7 @@ const ConnectScreen = () => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  setSelectedVolunteer(item._id),
-                    sendPushNotification(selectedVolunteer),
-                    RootNavigation.navigate("Volunteer");
+                  RootNavigation.navigate("Volunteer", { item });
                 }}
               >
                 <ListItem style={styles.listItem}>
@@ -82,4 +87,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ConnectScreen;
+export default SupportScreen;
