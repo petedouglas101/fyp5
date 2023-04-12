@@ -30,26 +30,38 @@ const VideoCallScreen = () => {
 
   useEffect(() => {
     const cRef = firestore().collection("calls").doc("call1");
-    cRef.onSnapshot((snapshot) => {
-      const subscribe = cRef.onSnapshot((snapshot) => {
-        const data = snapshot.data();
-        if (
-          peerConnection.current &&
-          !peerConnection.current.remoteDescription &&
-          data.answer
-        ) {
-          const answerDescription = new RTCSessionDescription(data.answer);
-          peerConnection.current.setRemoteDescription(answerDescription);
-        }
 
-        if (data && data.offer && !connecting.current) {
-          console.log("getting call is being set to true");
-          setGettingCall(true);
-        }
+    const subscribe = cRef.onSnapshot((snapshot) => {
+      const data = snapshot.data();
+      if (
+        peerConnection.current &&
+        !peerConnection.current.remoteDescription &&
+        data.answer
+      ) {
+        const answerDescription = new RTCSessionDescription(data.answer);
+        peerConnection.current.setRemoteDescription(answerDescription);
+      }
+
+      if (data && data.offer && !connecting.current) {
+        console.log("getting call is being set to true");
+        setGettingCall(true);
+      }
+    });
+
+    const unsubscribe = cRef
+      .collection("remoteCallee")
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach(async (change) => {
+          if (change.type === "removed") {
+            hangup();
+          }
+        });
       });
 
-      return () => subscribe();
-    });
+    return () => {
+      subscribe();
+      unsubscribe();
+    };
   }, []);
 
   const setupWebRTC = async () => {
@@ -68,6 +80,7 @@ const VideoCallScreen = () => {
         return;
       }
       setRemoteStream(streams[0]);
+      console.log("Remote stream added.", streams[0]);
     };
   };
 
@@ -128,8 +141,40 @@ const VideoCallScreen = () => {
 
   /** For disconnecting, close the connection, release the stream and delete the doc from firestore */
   const hangup = async () => {
+    console.log("hangup called");
     connecting.current = false;
     setGettingCall(false);
+    streamCleanup();
+    firestoreCleanup();
+    if (peerConnection.current) {
+      peerConnection.current.close();
+    }
+  };
+
+  const streamCleanup = () => {
+    if (localStream) {
+      localStream.getTracks().forEach((track) => {
+        track.stop();
+      });
+    }
+    setLocalStream(null);
+    setRemoteStream(null);
+  };
+  const firestoreCleanup = async () => {
+    const callRef = firestore().collection("calls").doc("call1").delete();
+    if (callRef) {
+      const remoteCallee = await callRef.collection("remoteCallee").get();
+      remoteCallee.forEach(async (candidate) => {
+        await candidate.ref.delete();
+      });
+
+      const localCaller = await callRef.collection("localCaller").get();
+      localCaller.forEach(async (candidate) => {
+        await candidate.ref.delete();
+      });
+
+      callRef.delete();
+    }
   };
 
   const join = async () => {

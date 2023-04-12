@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     marginBottom: 200,
   },
   link: {
-    color: "blue",
+    color: "#cccccc",
     marginLeft: 15,
     marginTop: 15,
   },

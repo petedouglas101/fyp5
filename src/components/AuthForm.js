@@ -31,6 +31,7 @@ const AuthForm = ({
           autoCapitalize="none"
           autoCorrect={false}
           placeholder="Email"
+          placeholderTextColor={"#cccccc"}
         />
       </View>
       {SignupScreen ? (
@@ -42,6 +43,7 @@ const AuthForm = ({
             autoCapitalize="none"
             autoCorrect={false}
             placeholder="Username"
+            placeholderTextColor={"#cccccc"}
           />
         </View>
       ) : null}
@@ -53,6 +55,7 @@ const AuthForm = ({
           autoCapitalize="none"
           autoCorrect={false}
           placeholder="Password"
+          placeholderTextColor={"#cccccc"}
         />
       </View>
       {errorMessage ? (

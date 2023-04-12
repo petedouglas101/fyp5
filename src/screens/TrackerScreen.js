@@ -3,32 +3,24 @@ import { View, StyleSheet, Button } from "react-native";
 import Timer from "react-native-background-timer-android";
 
 const TrackerScreen = () => {
-  const startTrackingRef = useRef(null);
+  // const startTrackingRef = useRef(null);
 
-  const startTracking = () => {
-    startTrackingRef.current = Timer.setInterval(
-      () => console.log("tic"),
-      2000
-    );
-  };
+  // const startTracking = () => {
+  //   startTrackingRef.current = Timer.setInterval(
+  //     () => console.log("tic"),
+  //     2000
+  //   );
+  // };
 
-  const stopTracking = () => {
-    Timer.clearInterval(startTrackingRef.current);
-    console.log("stopped");
-  };
+  // const stopTracking = () => {
+  //   Timer.clearInterval(startTrackingRef.current);
+  //   console.log("stopped");
+  // };
 
   return (
     <View style={styles.root}>
-      <Button
-        title="Start Tracking"
-        buttonStyle={styles.button}
-        onPress={startTracking}
-      />
-      <Button
-        title="Stop Tracking"
-        buttonStyle={styles.button}
-        onPress={stopTracking}
-      />
+      <Button title="Start Tracking" buttonStyle={styles.button} />
+      <Button title="Stop Tracking" buttonStyle={styles.button} />
     </View>
   );
 };

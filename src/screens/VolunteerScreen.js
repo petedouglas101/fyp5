@@ -3,13 +3,13 @@ import React, { useContext } from "react";
 import { View, StyleSheet, Text, Image } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { Context as SupportContext } from "../context/SupportContext";
+import * as RootNavigation from "../navigationRef";
 
 const VolunteerScreen = () => {
-  const { sendPushNotification } = useContext(SupportContext);
+  const { sendPushNotification, addVolunteerToUser, removeVolunteerFromUser } =
+    useContext(SupportContext);
   const route = useRoute();
   const volunteer = route.params.item;
-
-  console.log("Volunteer passed", volunteer);
   return (
     <View>
       <View>
@@ -23,6 +23,14 @@ const VolunteerScreen = () => {
           title="Chat"
           onPress={() => {
             sendPushNotification(volunteer._id);
+            RootNavigation.navigate("VideoCall");
+            addVolunteerToUser(volunteer._id);
+          }}
+        />
+        <Button
+          title="Remove Volunteer"
+          onPress={() => {
+            removeVolunteerFromUser(volunteer._id);
           }}
         />
       </View>

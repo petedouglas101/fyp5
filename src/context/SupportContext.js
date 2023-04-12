@@ -34,8 +34,38 @@ const sendPushNotification = (dispatch) => {
   };
 };
 
+const addVolunteerToUser = (dispatch) => {
+  return async (volunteerId) => {
+    try {
+      const response = await appApi.post("/addVolunteerToUser", {
+        volunteerId,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+const removeVolunteerFromUser = (dispatch) => {
+  return async (volunteerId) => {
+    console.log(volunteerId);
+    try {
+      const response = await appApi.post("/removeVolunteerFromUser", {
+        volunteerId,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
 export const { Context, Provider } = createDataContext(
   supportReducer,
-  { fetchAvailableVolunteers, sendPushNotification },
+  {
+    fetchAvailableVolunteers,
+    sendPushNotification,
+    addVolunteerToUser,
+    removeVolunteerFromUser,
+  },
   { volunteers: [] }
 );

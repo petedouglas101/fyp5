@@ -17,6 +17,7 @@ import { Provider as CommunityProvider } from "./src/context/CommunityContext";
 import { Provider as SupportProvider } from "./src/context/SupportContext";
 import { navigationRef } from "./src/navigationRef";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { StatusBar } from "expo-status-bar";
 
 const AuthStack = createNativeStackNavigator();
 const MainFlowTabsNav = createBottomTabNavigator();
@@ -123,6 +124,7 @@ export default function App() {
     <SupportProvider>
       <CommunityProvider>
         <AuthProvider>
+          <StatusBar />
           <NavigationContainer ref={navigationRef}>
             <AuthStack.Navigator
               screenOptions={{
@@ -142,6 +144,7 @@ export default function App() {
               <AuthStack.Screen name="VideoCall" component={VideoCallScreen} />
             </AuthStack.Navigator>
           </NavigationContainer>
+          <StatusBar style="auto" />
         </AuthProvider>
       </CommunityProvider>
     </SupportProvider>
