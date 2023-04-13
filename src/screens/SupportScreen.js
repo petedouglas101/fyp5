@@ -1,56 +1,69 @@
 import React, { useContext, useState } from "react";
-import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import { Button, ListItem } from "@rneui/themed";
 import { Context as SupportContext } from "../context/SupportContext";
 import * as RootNavigation from "../navigationRef";
-import { color } from "@rneui/base";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const SupportScreen = () => {
-  const [selectedVolunteer, setSelectedVolunteer] = useState({ _id: "" });
-  const { state, fetchAvailableVolunteers, sendPushNotification } =
-    useContext(SupportContext);
-
-  // //sorts volunteers by online status
-  // function sortByOnline(a, b) {
-  //   return b.isOnline - a.isOnline;
-  // }
-
-  // const sortedVolunteers = state.sort(sortByOnline);
+  const { state, fetchAvailableVolunteers } = useContext(SupportContext);
+  const [isButtonPressed, setIsButtonPressed] = useState(false);
 
   return (
     <View style={styles.root}>
-      <Button
-        title="Connect with a Volunteer"
-        buttonStyle={styles.button}
-        onPress={fetchAvailableVolunteers}
-      />
-      <View>
-        <FlatList
-          data={state}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  RootNavigation.navigate("Volunteer", { item });
-                }}
-              >
-                <ListItem style={styles.listItem}>
-                  <ListItem.Content>
-                    <ListItem.Title style={styles.title}>
-                      {item.username}
-                    </ListItem.Title>
-                    <ListItem.Subtitle style={styles.subtitle}>
-                      {item.isOnline ? "Available" : "Unavailable"}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                  <ListItem.Chevron />
-                </ListItem>
-              </TouchableOpacity>
-            );
+      {!isButtonPressed ? (
+        <Button
+          title="Connect with a Volunteer"
+          buttonStyle={styles.button}
+          onPress={() => {
+            fetchAvailableVolunteers();
+            setIsButtonPressed(true);
           }}
         />
-      </View>
+      ) : (
+        <View style={styles.overall}>
+          <Text style={styles.headline}>Available Volunteers</Text>
+          <FlatList
+            data={state}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item }) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    RootNavigation.navigate("Volunteer", { item });
+                  }}
+                >
+                  <ListItem style={styles.listItem}>
+                    <ListItem.Content>
+                      <ListItem.Title style={styles.title}>
+                        {item.username}
+                      </ListItem.Title>
+                      <ListItem.Subtitle
+                        style={[
+                          styles.subtitle,
+                          item.isOnline ? { color: "green" } : { color: "red" },
+                        ]}
+                      >
+                        {item.isOnline ? "Available" : "Unavailable"}
+                      </ListItem.Subtitle>
+                    </ListItem.Content>
+                    {item.isPreviousVolunteer && (
+                      <Icon name="star" size={20} color="#6699CC" />
+                    )}
+                    <ListItem.Chevron />
+                  </ListItem>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -73,17 +86,28 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   subtitle: {
-    fontSize: 11,
-    color: "red",
+    fontSize: 14,
     marginTop: 3,
   },
   title: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "bold",
   },
   listItem: {
     borderBottomColor: "#cccccc",
     borderBottomWidth: 1,
+  },
+  headline: {
+    fontSize: 20,
+    fontWeight: "bold",
+    alignSelf: "center",
+    marginBottom: 10,
+    color: "#cccccc",
+  },
+  overall: {
+    flex: 1,
+    backgroundColor: "#5A5A5A",
+    marginTop: 30,
   },
 });
 
