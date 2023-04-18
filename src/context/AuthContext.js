@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import createDataContext from "./createDataContext";
 import appApi from "../api/server";
@@ -49,7 +48,11 @@ const signup = (dispatch) => {
       });
       await AsyncStorage.setItem("token", response.data.token);
       dispatch({ type: "signin", payload: response.data.token });
-      RootNavigation.navigate("MainFlowTabs");
+      if (response.data.accountType == "user") {
+        RootNavigation.navigate("MainFlowTabs");
+      } else {
+        RootNavigation.navigate("VolunteerFlowTabs");
+      }
     } catch (err) {
       dispatch({
         type: "add_error",
@@ -65,7 +68,12 @@ const signin = (dispatch) => {
       const response = await appApi.post("/signin", { email, password });
       await AsyncStorage.setItem("token", response.data.token);
       dispatch({ type: "signin", payload: response.data.token });
-      RootNavigation.navigate("MainFlowTabs");
+
+      if (response.data.accountType == "user") {
+        RootNavigation.navigate("MainFlowTabs");
+      } else {
+        RootNavigation.navigate("VolunteerFlowTabs");
+      }
     } catch (err) {
       dispatch({
         type: "add_error",

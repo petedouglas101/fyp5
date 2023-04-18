@@ -12,6 +12,7 @@ import SupportScreen from "./src/screens/SupportScreen";
 import TrackerScreen from "./src/screens/TrackerScreen";
 import VideoCallScreen from "./src/screens/VideoCallScreen";
 import VolunteerScreen from "./src/screens/VolunteerScreen";
+import VolunteerAccountScreen from "./src/screens/VolunteerAccountScreen";
 import { Provider as AuthProvider } from "./src/context/AuthContext";
 import { Provider as CommunityProvider } from "./src/context/CommunityContext";
 import { Provider as SupportProvider } from "./src/context/SupportContext";
@@ -21,8 +22,37 @@ import { StatusBar } from "expo-status-bar";
 
 const AuthStack = createNativeStackNavigator();
 const MainFlowTabsNav = createBottomTabNavigator();
+const VolunteerFlowTabsNav = createBottomTabNavigator();
 
 const RootNavigation = navigationRef;
+
+const VolunteerFlowTabs = () => {
+  return (
+    <VolunteerFlowTabsNav.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === "Volunteer Account") {
+            iconName = "user";
+          }
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: "#6699CC",
+        tabBarInactiveTintColor: "#D3D3D3",
+        tabBarStyle: {
+          backgroundColor: "#36454F",
+        },
+        headerShown: false,
+      })}
+    >
+      <VolunteerFlowTabsNav.Screen
+        name="Volunteer Account"
+        component={VolunteerAccountScreen}
+        options={{ headerShown: false }}
+      />
+    </VolunteerFlowTabsNav.Navigator>
+  );
+};
 
 const MainFlowTabs = () => {
   return (
@@ -142,6 +172,10 @@ export default function App() {
               />
               <AuthStack.Screen name="Volunteer" component={VolunteerScreen} />
               <AuthStack.Screen name="VideoCall" component={VideoCallScreen} />
+              <AuthStack.Screen
+                name="VolunteerFlowTabs"
+                component={VolunteerFlowTabs}
+              />
             </AuthStack.Navigator>
           </NavigationContainer>
           <StatusBar style="auto" />

@@ -6,27 +6,21 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
-import { Button, ListItem } from "@rneui/themed";
+import { ListItem } from "@rneui/themed";
 import { Context as SupportContext } from "../context/SupportContext";
 import * as RootNavigation from "../navigationRef";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const SupportScreen = () => {
+const SupportScreen = ({ navigation }) => {
   const { state, fetchAvailableVolunteers } = useContext(SupportContext);
-  const [isButtonPressed, setIsButtonPressed] = useState(false);
+
+  navigation.addListener("focus", () => {
+    fetchAvailableVolunteers();
+  });
 
   return (
     <View style={styles.root}>
-      {!isButtonPressed ? (
-        <Button
-          title="Connect with a Volunteer"
-          buttonStyle={styles.button}
-          onPress={() => {
-            fetchAvailableVolunteers();
-            setIsButtonPressed(true);
-          }}
-        />
-      ) : (
+      {state.length > 0 ? (
         <View style={styles.overall}>
           <Text style={styles.headline}>Available Volunteers</Text>
           <FlatList
@@ -63,6 +57,8 @@ const SupportScreen = () => {
             }}
           />
         </View>
+      ) : (
+        <Text style={styles.headline}>No Volunteers Available</Text>
       )}
     </View>
   );
