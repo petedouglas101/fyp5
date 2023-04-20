@@ -133,6 +133,7 @@ export default function App() {
         //This only listens to notifications received when app is in foreground, not if they are interacted with
         //Maybe call handleNotificationResponse from useNotifications hook here
         //Can extract data from notification here
+        console.log(notification);
       }
     );
 

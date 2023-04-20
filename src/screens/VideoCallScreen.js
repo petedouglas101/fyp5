@@ -48,19 +48,19 @@ const VideoCallScreen = () => {
       }
     });
 
-    // const unsubscribe = cRef
-    //   .collection("remoteCallee")
-    //   .onSnapshot((snapshot) => {
-    //     snapshot.docChanges().forEach(async (change) => {
-    //       if (change.type === "removed") {
-    //         hangup();
-    //       }
-    //     });
-    //   });
+    const unsubscribe = cRef
+      .collection("remoteCallee")
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach(async (change) => {
+          if (change.type === "removed") {
+            hangup();
+          }
+        });
+      });
 
     return () => {
       subscribe();
-      // unsubscribe();
+      unsubscribe();
     };
   }, []);
 
