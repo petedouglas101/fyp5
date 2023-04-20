@@ -11,6 +11,7 @@ import GettingCall from "../components/GettingCall";
 import VideoCall from "../components/VideoCall";
 import { useMediaStreams } from "../hooks/useMediaStreams";
 import firestore from "@react-native-firebase/firestore";
+import * as RootNavigation from "../navigationRef";
 
 const VideoCallScreen = () => {
   const peerConstraints = {
@@ -48,19 +49,19 @@ const VideoCallScreen = () => {
       }
     });
 
-    const unsubscribe = cRef
-      .collection("remoteCallee")
-      .onSnapshot((snapshot) => {
-        snapshot.docChanges().forEach(async (change) => {
-          if (change.type === "removed") {
-            hangup();
-          }
-        });
-      });
+    // const unsubscribe = cRef
+    //   .collection("remoteCallee")
+    //   .onSnapshot((snapshot) => {
+    //     snapshot.docChanges().forEach(async (change) => {
+    //       if (change.type === "removed") {
+    //         hangup();
+    //       }
+    //     });
+    //   });
 
     return () => {
       subscribe();
-      unsubscribe();
+      // unsubscribe();
     };
   }, []);
 
@@ -152,14 +153,41 @@ const VideoCallScreen = () => {
   };
 
   const streamCleanup = () => {
+    // if (peerConnection.current) {
+    //   peerConnection.current.ontrack = null;
+    //   peerConnection.current.onicecandidate = null;
+    //   peerConnection.current.oniceconnectionstatechange = null;
+    //   peerConnection.current.onnegotiationneeded = null;
+    //   peerConnection.current.onicegatheringstatechange = null;
+    //   peerConnection.current.onsignalingstatechange = null;
+    //   peerConnection.current.onremovestream = null;
+    //   peerConnection.current.onaddstream = null;
+    // }
     if (localStream) {
       localStream.getTracks().forEach((track) => {
         track.stop();
       });
     }
+    peerConnection.current.close();
     setLocalStream(null);
     setRemoteStream(null);
+    RootNavigation.navigate("VideoCall");
   };
+
+  // const firestoreCleanup = async () => {
+  //   // Delete Firestore collections and documents related to the call
+  //   await firestore().collection("calls").doc("call1").delete();
+  //   await firestore()
+  //     .collection("calls")
+  //     .doc("call1")
+  //     .collection("localCaller")
+  //     .delete();
+  //   await firestore()
+  //     .collection("calls")
+  //     .doc("call1")
+  //     .collection("remoteCallee")
+  //     .delete();
+  // };
   const firestoreCleanup = async () => {
     const callRef = firestore().collection("calls").doc("call1").delete();
     if (callRef) {

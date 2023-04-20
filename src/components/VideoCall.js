@@ -3,13 +3,13 @@ import { View, Text, StyleSheet } from "react-native";
 import CallButton from "./CallButton";
 import { RTCView, MediaStream } from "react-native-webrtc";
 
-const ButtonConatiner = (hangup) => {
+function ButtonConatiner({ hangup }) {
   return (
     <View style={styles.buttonContainer}>
       <CallButton iconName="phone" backgroundColor="red" onPress={hangup} />
     </View>
   );
-};
+}
 
 const VideoCall = ({ localStream, remoteStream, hangup }) => {
   return (

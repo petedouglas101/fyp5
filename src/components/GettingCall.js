@@ -2,8 +2,6 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import CallButton from "./CallButton";
 
-//This is the screen that will be shown when a user is getting a call
-//Add some background image or something to make it look better
 const GettingCall = ({ hangup, join }) => {
   return (
     //might not need two views
