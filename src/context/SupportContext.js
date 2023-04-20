@@ -48,7 +48,6 @@ const addVolunteerToUser = (dispatch) => {
 
 const removeVolunteerFromUser = (dispatch) => {
   return async (volunteerId) => {
-    console.log(volunteerId);
     try {
       const response = await appApi.post("/removeVolunteerFromUser", {
         volunteerId,

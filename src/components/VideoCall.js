@@ -3,15 +3,31 @@ import { View, Text, StyleSheet } from "react-native";
 import CallButton from "./CallButton";
 import { RTCView, MediaStream } from "react-native-webrtc";
 
-function ButtonConatiner({ hangup }) {
+function ButtonConatiner({ hangup, hideCamera, toggleCamera }) {
   return (
     <View style={styles.buttonContainer}>
       <CallButton iconName="phone" backgroundColor="red" onPress={hangup} />
+      <CallButton
+        iconName="video"
+        backgroundColor="grey"
+        onPress={hideCamera}
+      />
+      <CallButton
+        iconName="sync"
+        backgroundColor="grey"
+        onPress={toggleCamera}
+      />
     </View>
   );
 }
 
-const VideoCall = ({ localStream, remoteStream, hangup }) => {
+const VideoCall = ({
+  localStream,
+  remoteStream,
+  hangup,
+  hideCamera,
+  toggleCamera,
+}) => {
   return (
     <View style={styles.container}>
       {localStream && !remoteStream ? (
@@ -42,6 +58,8 @@ const VideoCall = ({ localStream, remoteStream, hangup }) => {
         hangup={hangup}
         localStream={localStream}
         remoteStream={remoteStream}
+        hideCamera={hideCamera}
+        toggleCamera={toggleCamera}
       />
     </View>
   );

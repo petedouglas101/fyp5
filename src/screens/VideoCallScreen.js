@@ -44,7 +44,6 @@ const VideoCallScreen = () => {
       }
 
       if (data && data.offer && !connecting.current) {
-        console.log("getting call is being set to true");
         setGettingCall(true);
       }
     });
@@ -81,7 +80,6 @@ const VideoCallScreen = () => {
         return;
       }
       setRemoteStream(streams[0]);
-      console.log("Remote stream added.", streams[0]);
     };
   };
 
@@ -108,8 +106,6 @@ const VideoCallScreen = () => {
     peerConnection.current.iceconnectionstatechange = (event) => {
       switch (peerConnection.current.iceConnectionState) {
         case "connected":
-          // You can handle the call being connected here.
-          // Like setting the video streams to visible.
           setGettingCall(false);
           break;
         case "completed":
@@ -140,9 +136,7 @@ const VideoCallScreen = () => {
     });
   };
 
-  /** For disconnecting, close the connection, release the stream and delete the doc from firestore */
   const hangup = async () => {
-    console.log("hangup called");
     connecting.current = false;
     setGettingCall(false);
     streamCleanup();
@@ -153,16 +147,6 @@ const VideoCallScreen = () => {
   };
 
   const streamCleanup = () => {
-    // if (peerConnection.current) {
-    //   peerConnection.current.ontrack = null;
-    //   peerConnection.current.onicecandidate = null;
-    //   peerConnection.current.oniceconnectionstatechange = null;
-    //   peerConnection.current.onnegotiationneeded = null;
-    //   peerConnection.current.onicegatheringstatechange = null;
-    //   peerConnection.current.onsignalingstatechange = null;
-    //   peerConnection.current.onremovestream = null;
-    //   peerConnection.current.onaddstream = null;
-    // }
     if (localStream) {
       localStream.getTracks().forEach((track) => {
         track.stop();
@@ -174,20 +158,6 @@ const VideoCallScreen = () => {
     RootNavigation.navigate("VideoCall");
   };
 
-  // const firestoreCleanup = async () => {
-  //   // Delete Firestore collections and documents related to the call
-  //   await firestore().collection("calls").doc("call1").delete();
-  //   await firestore()
-  //     .collection("calls")
-  //     .doc("call1")
-  //     .collection("localCaller")
-  //     .delete();
-  //   await firestore()
-  //     .collection("calls")
-  //     .doc("call1")
-  //     .collection("remoteCallee")
-  //     .delete();
-  // };
   const firestoreCleanup = async () => {
     const callRef = firestore().collection("calls").doc("call1").delete();
     if (callRef) {
@@ -233,6 +203,15 @@ const VideoCallScreen = () => {
     callRef.update(callWithAnswer);
   };
 
+  const toggleCamera = () => {
+    localStream.getVideoTracks()[0]._switchCamera();
+  };
+
+  const hideCamera = () => {
+    localStream.getVideoTracks()[0].enabled =
+      !localStream.getVideoTracks()[0].enabled;
+  };
+
   return (
     <View style={styles.container}>
       {gettingCall ? (
@@ -246,6 +225,8 @@ const VideoCallScreen = () => {
             localStream={localStream}
             remoteStream={remoteStream}
             hangup={hangup}
+            hideCamera={hideCamera}
+            toggleCamera={toggleCamera}
           />
         </View>
       ) : (
