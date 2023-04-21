@@ -13,12 +13,14 @@ import TrackerScreen from "./src/screens/TrackerScreen";
 import VideoCallScreen from "./src/screens/VideoCallScreen";
 import VolunteerScreen from "./src/screens/VolunteerScreen";
 import VolunteerAccountScreen from "./src/screens/VolunteerAccountScreen";
+import AfterCallScreen from "./src/screens/AfterCallScreen";
 import { Provider as AuthProvider } from "./src/context/AuthContext";
 import { Provider as CommunityProvider } from "./src/context/CommunityContext";
 import { Provider as SupportProvider } from "./src/context/SupportContext";
 import { navigationRef } from "./src/navigationRef";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { StatusBar } from "expo-status-bar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AuthStack = createNativeStackNavigator();
 const MainFlowTabsNav = createBottomTabNavigator();
@@ -142,6 +144,21 @@ export default function App() {
       (response) => {
         //Bring user to the correct screen
         RootNavigation.navigate("VideoCall");
+        console.log(
+          "From interaction",
+          response.notification.request.content.data
+        );
+        //store responce in async storage
+        AsyncStorage.setItem(
+          "response",
+          JSON.stringify(
+            response.notification.request.content.data.userWhoSentNotification
+              .email
+          )
+        );
+        AsyncStorage.getItem("response").then((res) => {
+          console.log("Responce from async stiorage", res);
+        });
       }
     );
 
@@ -176,6 +193,11 @@ export default function App() {
               <AuthStack.Screen
                 name="VolunteerFlowTabs"
                 component={VolunteerFlowTabs}
+              />
+              <AuthStack.Screen
+                name="AfterCallScreen"
+                component={AfterCallScreen}
+                options={{ headerShown: false }}
               />
             </AuthStack.Navigator>
           </NavigationContainer>

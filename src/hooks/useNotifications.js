@@ -32,6 +32,32 @@ export const useNotifications = () => {
     return token;
   };
 
+  // const handleNotificationResponse = async (response) => {
+  //   const { notification } = response;
+  //   const { data } = notification.request.content;
+  //   const { type } = data;
+  //   if (type === "call") {
+  //     Alert.alert(
+  //       "Incoming Call",
+  //       "You have an incoming call from a volunteer",
+  //       [
+  //         {
+  //           text: "Accept",
+  //           onPress: () => {
+  //             console.log("Accept");
+  //           },
+  //         },
+  //         {
+  //           text: "Decline",
+  //           onPress: () => {
+  //             console.log("Decline");
+  //           },
+  //         },
+  //       ]
+  //     );
+  //   }
+  // };
+
   return {
     registerForPushNotificationsAsync,
   };

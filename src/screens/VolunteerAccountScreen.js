@@ -5,8 +5,8 @@ import { Context as AuthContext } from "../context/AuthContext";
 
 const VolunteerAccountScreen = () => {
   const [isEnabled, setIsEnabled] = useState(false);
-  const { signout } = useContext(AuthContext);
-
+  const [isOnline, setIsOnline] = useState(true);
+  const { signout, getStatus, status } = useContext(AuthContext);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Account</Text>
@@ -15,7 +15,14 @@ const VolunteerAccountScreen = () => {
         <Switch
           trackColor={{ false: "#767577", true: "#81b0ff" }}
           thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-          onValueChange={() => setIsEnabled(!isEnabled)}
+          onValueChange={() => {
+            setIsEnabled(!isEnabled);
+            if (isEnabled) {
+              setIsOnline(true);
+            } else {
+              setIsOnline(false);
+            }
+          }}
           value={isEnabled}
         />
       </View>

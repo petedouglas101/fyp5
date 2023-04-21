@@ -13,6 +13,8 @@ const authReducer = (state, action) => {
       return { token: null, errorMessage: "" };
     case "clear_error_message":
       return { ...state, errorMessage: "" };
+    case "get_status":
+      return { status: action.payload };
     default:
       return state;
   }
@@ -91,8 +93,22 @@ const signout = (dispatch) => {
   };
 };
 
+const getStatus = (dispatch) => {
+  return async () => {
+    try {
+      const response = await appApi.get("/getStatus");
+      console.log("response from context", response.data);
+
+      dispatch({ type: "get_status", payload: response.data });
+      console.log("response from context", response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
 export const { Context, Provider } = createDataContext(
   authReducer,
-  { signin, signup, signout, clearErrorMessage, tryLocalSignin },
-  { token: null, errorMessage: "" }
+  { signin, signup, signout, clearErrorMessage, tryLocalSignin, getStatus },
+  { token: null, errorMessage: "", status: null }
 );

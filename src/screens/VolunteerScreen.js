@@ -23,7 +23,7 @@ const VolunteerScreen = () => {
           title="Chat"
           onPress={() => {
             sendPushNotification(volunteer._id);
-            RootNavigation.navigate("VideoCall");
+            RootNavigation.navigate("VideoCall", { volunteer });
             addVolunteerToUser(volunteer._id);
           }}
         />
