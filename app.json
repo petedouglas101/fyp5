@@ -45,7 +45,13 @@
     "jsEngine": "hermes",
     "plugins": [
       "@config-plugins/react-native-webrtc",
-      "@react-native-firebase/app"
+      "@react-native-firebase/app",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "This app needs access to your photos to upload images."
+        }
+      ]
     ],
     "extra": {
       "eas": {

@@ -3,8 +3,12 @@ import * as Notifications from "expo-notifications";
 import { Alert } from "react-native";
 import { Platform } from "react-native";
 import Constants from "expo-constants";
+import { navigationRef } from "../navigationRef";
+import appApi from "../api/server";
 
 export const useNotifications = () => {
+  const RootNavigation = navigationRef;
+
   let token;
   const projectId = Constants.expoConfig.extra.eas.projectId;
   const registerForPushNotificationsAsync = async () => {
@@ -32,31 +36,11 @@ export const useNotifications = () => {
     return token;
   };
 
-  // const handleNotificationResponse = async (response) => {
-  //   const { notification } = response;
-  //   const { data } = notification.request.content;
-  //   const { type } = data;
-  //   if (type === "call") {
-  //     Alert.alert(
-  //       "Incoming Call",
-  //       "You have an incoming call from a volunteer",
-  //       [
-  //         {
-  //           text: "Accept",
-  //           onPress: () => {
-  //             console.log("Accept");
-  //           },
-  //         },
-  //         {
-  //           text: "Decline",
-  //           onPress: () => {
-  //             console.log("Decline");
-  //           },
-  //         },
-  //       ]
-  //     );
-  //   }
-  // };
+  Notifications.addNotificationResponseReceivedListener((response) => {
+    RootNavigation.navigate("VideoCall");
+  });
+
+  Notifications.addNotificationReceivedListener((notification) => {});
 
   return {
     registerForPushNotificationsAsync,

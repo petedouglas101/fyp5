@@ -28,6 +28,7 @@ const VideoCallScreen = () => {
   const [gettingCall, setGettingCall] = useState(false);
   const peerConnection = useRef(null);
   const connecting = useRef(false);
+  const [cameraIsHidden, setCameraIsHidden] = useState(false);
 
   useEffect(() => {
     const cRef = firestore().collection("calls").doc("call1");
@@ -114,7 +115,6 @@ const VideoCallScreen = () => {
     };
   };
 
-  //
   const exchangeICECandidates = (callRef, localCaller, remoteCallee) => {
     const candidatesCollection = callRef.collection(localCaller);
 
@@ -144,6 +144,7 @@ const VideoCallScreen = () => {
     if (peerConnection.current) {
       peerConnection.current.close();
     }
+    RootNavigation.navigate("AfterCallScreenUser");
   };
 
   const streamCleanup = () => {
@@ -155,7 +156,6 @@ const VideoCallScreen = () => {
     peerConnection.current.close();
     setLocalStream(null);
     setRemoteStream(null);
-    RootNavigation.navigate("VideoCall");
   };
 
   const firestoreCleanup = async () => {
@@ -210,6 +210,8 @@ const VideoCallScreen = () => {
   const hideCamera = () => {
     localStream.getVideoTracks()[0].enabled =
       !localStream.getVideoTracks()[0].enabled;
+
+    setCameraIsHidden(!cameraIsHidden);
   };
 
   return (
@@ -222,7 +224,7 @@ const VideoCallScreen = () => {
       {localStream ? (
         <View style={styles.container}>
           <VideoCall
-            localStream={localStream}
+            localStream={cameraIsHidden ? null : localStream}
             remoteStream={remoteStream}
             hangup={hangup}
             hideCamera={hideCamera}

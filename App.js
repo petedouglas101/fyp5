@@ -13,10 +13,11 @@ import TrackerScreen from "./src/screens/TrackerScreen";
 import VideoCallScreen from "./src/screens/VideoCallScreen";
 import VolunteerScreen from "./src/screens/VolunteerScreen";
 import VolunteerAccountScreen from "./src/screens/VolunteerAccountScreen";
-import AfterCallScreen from "./src/screens/AfterCallScreen";
+import AfterCallScreenUser from "./src/screens/AfterCallScreenUser";
 import { Provider as AuthProvider } from "./src/context/AuthContext";
 import { Provider as CommunityProvider } from "./src/context/CommunityContext";
 import { Provider as SupportProvider } from "./src/context/SupportContext";
+import { Provider as VolunteerAccountProvider } from "./src/context/VolunteerAccountContext";
 import { navigationRef } from "./src/navigationRef";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { StatusBar } from "expo-status-bar";
@@ -105,15 +106,15 @@ const MainFlowTabs = () => {
   );
 };
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => {
-    return {
-      shouldShowAlert: true,
-      shouldSetBadge: true,
-      shouldPlaySound: true,
-    };
-  },
-});
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => {
+//     return {
+//       shouldShowAlert: true,
+//       shouldSetBadge: true,
+//       shouldPlaySound: true,
+//     };
+//   },
+// });
 
 export default function App() {
   const { registerForPushNotificationsAsync } = useNotifications();
@@ -135,75 +136,84 @@ export default function App() {
         //This only listens to notifications received when app is in foreground, not if they are interacted with
         //Maybe call handleNotificationResponse from useNotifications hook here
         //Can extract data from notification here
-        console.log(notification);
+        // console.log(notification);
       }
     );
 
-    //Called when a notification is interacted with
-    const subscription2 = Notifications.addNotificationResponseReceivedListener(
-      (response) => {
-        //Bring user to the correct screen
-        RootNavigation.navigate("VideoCall");
-        console.log(
-          "From interaction",
-          response.notification.request.content.data
-        );
-        //store responce in async storage
-        AsyncStorage.setItem(
-          "response",
-          JSON.stringify(
-            response.notification.request.content.data.userWhoSentNotification
-              .email
-          )
-        );
-        AsyncStorage.getItem("response").then((res) => {
-          console.log("Responce from async stiorage", res);
-        });
-      }
-    );
+    // //Called when a notification is interacted with
+    // const subscription2 = Notifications.addNotificationResponseReceivedListener(
+    //   (response) => {
+    //     //Bring user to the correct screen
+    //     RootNavigation.navigate("VideoCall");
+    //     //   console.log(
+    //     //     "From interaction",
+    //     //     response.notification.request.content.data
+    //     //   );
+    //     //   //store responce in async storage
+    //     //   AsyncStorage.setItem(
+    //     //     "response",
+    //     //     JSON.stringify(
+    //     //       response.notification.request.content.data.userWhoSentNotification
+    //     //         .email
+    //     //     )
+    //     //   );
+    //     //   AsyncStorage.getItem("response").then((res) => {
+    //     //     console.log("Responce from async stiorage", res);
+    //     //   });
+    //     // }
+    //   }
+    // );
 
     return () => {
       subscription.remove();
-      subscription2.remove();
+      // subscription2.remove();
     };
   }, []);
 
   return (
-    <SupportProvider>
-      <CommunityProvider>
-        <AuthProvider>
-          <StatusBar />
-          <NavigationContainer ref={navigationRef}>
-            <AuthStack.Navigator
-              screenOptions={{
-                headerStyle: { backgroundColor: "#6699CC" },
-                contentStyle: { backgroundColor: "#5A5A5A" },
-                headerTintColor: "#36454F",
-              }}
-            >
-              <AuthStack.Screen name="Signup" component={SignupScreen} />
-              <AuthStack.Screen name="Signin" component={SigninScreen} />
-              <AuthStack.Screen
-                name="MainFlowTabs"
-                component={MainFlowTabs}
-                options={{ headerShown: false }}
-              />
-              <AuthStack.Screen name="Volunteer" component={VolunteerScreen} />
-              <AuthStack.Screen name="VideoCall" component={VideoCallScreen} />
-              <AuthStack.Screen
-                name="VolunteerFlowTabs"
-                component={VolunteerFlowTabs}
-              />
-              <AuthStack.Screen
-                name="AfterCallScreen"
-                component={AfterCallScreen}
-                options={{ headerShown: false }}
-              />
-            </AuthStack.Navigator>
-          </NavigationContainer>
-          <StatusBar style="auto" />
-        </AuthProvider>
-      </CommunityProvider>
-    </SupportProvider>
+    <VolunteerAccountProvider>
+      <SupportProvider>
+        <CommunityProvider>
+          <AuthProvider>
+            <StatusBar />
+            <NavigationContainer ref={navigationRef}>
+              <AuthStack.Navigator
+                screenOptions={{
+                  headerStyle: { backgroundColor: "#6699CC" },
+                  contentStyle: { backgroundColor: "#5A5A5A" },
+                  headerTintColor: "#36454F",
+                }}
+              >
+                <AuthStack.Screen name="Signup" component={SignupScreen} />
+                <AuthStack.Screen name="Signin" component={SigninScreen} />
+                <AuthStack.Screen
+                  name="MainFlowTabs"
+                  component={MainFlowTabs}
+                  options={{ headerShown: false }}
+                />
+                <AuthStack.Screen
+                  name="Volunteer"
+                  component={VolunteerScreen}
+                />
+                <AuthStack.Screen
+                  name="VideoCall"
+                  component={VideoCallScreen}
+                />
+                <AuthStack.Screen
+                  name="VolunteerFlowTabs"
+                  component={VolunteerFlowTabs}
+                />
+                <AuthStack.Screen
+                  name="AfterCallScreenUser"
+                  component={AfterCallScreenUser}
+                  options={{ headerShown: false }}
+                />
+              </AuthStack.Navigator>
+            </NavigationContainer>
+            <StatusBar style="auto" />
+          </AuthProvider>
+        </CommunityProvider>
+      </SupportProvider>
+    </VolunteerAccountProvider>
   );
 }

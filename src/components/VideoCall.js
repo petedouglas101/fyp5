@@ -33,7 +33,7 @@ const VideoCall = ({
       {localStream && !remoteStream ? (
         <View style={styles.container}>
           <RTCView
-            streamURL={localStream.toURL()}
+            streamURL={localStream == null ? null : localStream.toURL()}
             objectFit={"cover"}
             style={styles.video}
           />
@@ -47,7 +47,7 @@ const VideoCall = ({
             style={styles.video}
           />
           <RTCView
-            streamURL={localStream.toURL()}
+            streamURL={localStream == null ? null : localStream.toURL()}
             objectFit={"cover"}
             style={styles.videoLocal}
           />

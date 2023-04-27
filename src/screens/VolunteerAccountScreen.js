@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { View, StyleSheet, Text, Switch } from "react-native";
 import { Button } from "@rneui/themed";
 import { Context as AuthContext } from "../context/AuthContext";
+import ImagePicker from "../components/ImagePicker";
 
 const VolunteerAccountScreen = () => {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -26,6 +27,8 @@ const VolunteerAccountScreen = () => {
           value={isEnabled}
         />
       </View>
+      <ImagePicker />
+
       <Button title="Sign Out" onPress={signout} />
     </View>
   );
