@@ -14,6 +14,7 @@ import VideoCallScreen from "./src/screens/VideoCallScreen";
 import VolunteerScreen from "./src/screens/VolunteerScreen";
 import VolunteerAccountScreen from "./src/screens/VolunteerAccountScreen";
 import AfterCallScreenUser from "./src/screens/AfterCallScreenUser";
+import CommentsScreen from "./src/screens/CommentsScreen";
 import { Provider as AuthProvider } from "./src/context/AuthContext";
 import { Provider as CommunityProvider } from "./src/context/CommunityContext";
 import { Provider as SupportProvider } from "./src/context/SupportContext";
@@ -106,16 +107,6 @@ const MainFlowTabs = () => {
   );
 };
 
-// Notifications.setNotificationHandler({
-//   handleNotification: async () => {
-//     return {
-//       shouldShowAlert: true,
-//       shouldSetBadge: true,
-//       shouldPlaySound: true,
-//     };
-//   },
-// });
-
 export default function App() {
   const { registerForPushNotificationsAsync } = useNotifications();
 
@@ -132,41 +123,11 @@ export default function App() {
     });
 
     const subscription = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        //This only listens to notifications received when app is in foreground, not if they are interacted with
-        //Maybe call handleNotificationResponse from useNotifications hook here
-        //Can extract data from notification here
-        // console.log(notification);
-      }
+      (notification) => {}
     );
-
-    // //Called when a notification is interacted with
-    // const subscription2 = Notifications.addNotificationResponseReceivedListener(
-    //   (response) => {
-    //     //Bring user to the correct screen
-    //     RootNavigation.navigate("VideoCall");
-    //     //   console.log(
-    //     //     "From interaction",
-    //     //     response.notification.request.content.data
-    //     //   );
-    //     //   //store responce in async storage
-    //     //   AsyncStorage.setItem(
-    //     //     "response",
-    //     //     JSON.stringify(
-    //     //       response.notification.request.content.data.userWhoSentNotification
-    //     //         .email
-    //     //     )
-    //     //   );
-    //     //   AsyncStorage.getItem("response").then((res) => {
-    //     //     console.log("Responce from async stiorage", res);
-    //     //   });
-    //     // }
-    //   }
-    // );
 
     return () => {
       subscription.remove();
-      // subscription2.remove();
     };
   }, []);
 
@@ -206,6 +167,11 @@ export default function App() {
                 <AuthStack.Screen
                   name="AfterCallScreenUser"
                   component={AfterCallScreenUser}
+                  options={{ headerShown: false }}
+                />
+                <AuthStack.Screen
+                  name="CommentsScreen"
+                  component={CommentsScreen}
                   options={{ headerShown: false }}
                 />
               </AuthStack.Navigator>

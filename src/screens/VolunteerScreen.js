@@ -20,7 +20,6 @@ const VolunteerScreen = () => {
     removeVolunteerFromUser,
     addCallToDb,
     retrieveCalls,
-    calls,
     state,
   } = useContext(SupportContext);
   const route = useRoute();

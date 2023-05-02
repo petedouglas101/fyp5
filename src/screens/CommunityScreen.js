@@ -49,6 +49,8 @@ const CommunityScreen = ({ navigation }) => {
                   post={item.content}
                   date={item.date}
                   user={item.username}
+                  comments={item.comments}
+                  id={item._id}
                 />
               </View>
             );
@@ -65,9 +67,6 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
   postContainer: {
-    borderBottomWidth: 1,
-    borderColor: "red",
-    borderRadius: 5,
     margin: (10, 10, 0, 10),
   },
   postInputContainer: {
