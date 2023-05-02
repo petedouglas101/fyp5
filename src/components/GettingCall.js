@@ -1,10 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import CallButton from "./CallButton";
 
 const GettingCall = ({ hangup, join }) => {
   return (
-    //might not need two views
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
         <CallButton

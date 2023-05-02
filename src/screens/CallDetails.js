@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useRoute } from "@react-navigation/native";
 
 const CallDetails = () => {
   const route = useRoute();
   const call = route.params.call;
-  console.log("CallDetails", call);
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Notes from Call:</Text>

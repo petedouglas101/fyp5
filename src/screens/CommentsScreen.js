@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { View, TextInput, StyleSheet, Button, FlatList } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { Context as CommunityContext } from "../context/CommunityContext";
@@ -10,7 +10,6 @@ const CommentsScreen = () => {
 
   const route = useRoute();
   const comments = route.params.comments;
-  const post = route.params.post;
   const id = route.params.id;
 
   function sortByDate(a, b) {

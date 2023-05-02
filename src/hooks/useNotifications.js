@@ -1,10 +1,7 @@
-import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import { Alert } from "react-native";
 import { Platform } from "react-native";
 import Constants from "expo-constants";
 import { navigationRef } from "../navigationRef";
-import appApi from "../api/server";
 
 export const useNotifications = () => {
   const RootNavigation = navigationRef;

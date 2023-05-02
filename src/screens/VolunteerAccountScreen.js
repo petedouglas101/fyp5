@@ -2,32 +2,13 @@ import React, { useContext, useState } from "react";
 import { View, StyleSheet, Text, Switch } from "react-native";
 import { Button } from "@rneui/themed";
 import { Context as AuthContext } from "../context/AuthContext";
-import ImagePicker from "../components/ImagePicker";
 
 const VolunteerAccountScreen = () => {
   const [isEnabled, setIsEnabled] = useState(false);
-  const [isOnline, setIsOnline] = useState(true);
-  const { signout, getStatus, status } = useContext(AuthContext);
+  const { signout } = useContext(AuthContext);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Account</Text>
-      <View style={{ flexDirection: "row" }}>
-        <Text>Set Status:</Text>
-        <Switch
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-          onValueChange={() => {
-            setIsEnabled(!isEnabled);
-            if (isEnabled) {
-              setIsOnline(true);
-            } else {
-              setIsOnline(false);
-            }
-          }}
-          value={isEnabled}
-        />
-      </View>
-      <ImagePicker />
 
       <Button title="Sign Out" onPress={signout} />
     </View>

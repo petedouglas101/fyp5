@@ -9,7 +9,6 @@ import SigninScreen from "./src/screens/SigninScreen";
 import AccountScreen from "./src/screens/AccountScreen";
 import CommunityScreen from "./src/screens/CommunityScreen";
 import SupportScreen from "./src/screens/SupportScreen";
-import TrackerScreen from "./src/screens/TrackerScreen";
 import VideoCallScreen from "./src/screens/VideoCallScreen";
 import VolunteerScreen from "./src/screens/VolunteerScreen";
 import VolunteerAccountScreen from "./src/screens/VolunteerAccountScreen";
@@ -23,7 +22,6 @@ import { Provider as VolunteerAccountProvider } from "./src/context/VolunteerAcc
 import { navigationRef } from "./src/navigationRef";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { StatusBar } from "expo-status-bar";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AuthStack = createNativeStackNavigator();
 const MainFlowTabsNav = createBottomTabNavigator();
@@ -69,8 +67,6 @@ const MainFlowTabs = () => {
             iconName = "users";
           } else if (route.name === "Support") {
             iconName = "handshake";
-          } else if (route.name === "Tracker") {
-            iconName = "heartbeat";
           } else if (route.name === "Account") {
             iconName = "user";
           }
@@ -92,11 +88,6 @@ const MainFlowTabs = () => {
       <MainFlowTabsNav.Screen
         name="Support"
         component={SupportScreen}
-        options={{ headerShown: false }}
-      />
-      <MainFlowTabsNav.Screen
-        name="Tracker"
-        component={TrackerScreen}
         options={{ headerShown: false }}
       />
       <MainFlowTabsNav.Screen

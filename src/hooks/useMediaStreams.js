@@ -6,7 +6,7 @@ export const useMediaStreams = () => {
       audio: true,
       video: {
         frameRate: 30,
-        facingMode: "user",
+        facingMode: "facing-front"
       },
     };
 

@@ -21,7 +21,6 @@ const fetchAvailableVolunteers = (dispatch) => {
       dispatch({ type: "fetch_volunteers", payload: response.data });
     } catch (err) {
       console.log(err);
-      //Add error for no available volunteers
     }
   };
 };

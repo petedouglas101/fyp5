@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import CallButton from "./CallButton";
-import { RTCView, MediaStream } from "react-native-webrtc";
+import { RTCView } from "react-native-webrtc";
 
 function ButtonConatiner({ hangup, hideCamera, toggleCamera }) {
   return (

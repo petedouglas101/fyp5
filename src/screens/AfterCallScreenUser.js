@@ -3,8 +3,9 @@ import { View, Text, StyleSheet, TextInput } from "react-native";
 import { Button } from "@rneui/themed";
 import { Context as SupportContext } from "../context/SupportContext";
 import * as RootNavigation from "../navigationRef";
+
 const AfterCallScreenUser = () => {
-  const { call, state, addNotesToCall } = useContext(SupportContext);
+  const { state, addNotesToCall } = useContext(SupportContext);
   const [notes, setNotes] = useState("");
   return (
     <View style={styles.container}>

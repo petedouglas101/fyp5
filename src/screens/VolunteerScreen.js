@@ -46,8 +46,6 @@ const VolunteerScreen = () => {
     });
   }
 
-  console.log(formattedCalls);
-
   return (
     <View style={styles.root}>
       <View style={styles.volunteerInfo}>
