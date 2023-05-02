@@ -32,8 +32,6 @@ const createPost = (dispatch) => {
 
 const addComment = (dispatch) => {
   return async ({ comment, id }) => {
-    console.log("comment from context", comment);
-    console.log("id from context", id);
     try {
       const response = await appApi.post("/addComment", { comment, id });
       dispatch({ type: "add_comment", payload: response.data });
@@ -43,7 +41,6 @@ const addComment = (dispatch) => {
 
 const fetchComments = (dispatch) => {
   return async (id) => {
-    console.log("id from context", id);
     try {
       const response = await appApi.get(`/fetchComments/${id}`);
       dispatch({ type: "fetch_comments", payload: response.data });

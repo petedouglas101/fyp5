@@ -6,7 +6,7 @@ import Comment from "../components/Comment";
 
 const CommentsScreen = () => {
   const [comment, setComment] = useState("");
-  const { fetchComments, addComment } = useContext(CommunityContext);
+  const { addComment } = useContext(CommunityContext);
 
   const route = useRoute();
   const comments = route.params.comments;
@@ -84,7 +84,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 10,
     padding: 10,
-    // backgroundColor: "#ffffff",
   },
 });
 

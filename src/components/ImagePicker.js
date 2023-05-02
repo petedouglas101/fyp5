@@ -15,7 +15,6 @@ const ImagePicker = () => {
       cameraType: "front",
       base64: true,
     });
-    console.log("image", image);
     setImage(image.assets[0].uri);
     uploadProfilePicture(image.assets[0].base64);
   }

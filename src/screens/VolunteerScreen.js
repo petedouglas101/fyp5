@@ -46,6 +46,8 @@ const VolunteerScreen = () => {
     });
   }
 
+  console.log(formattedCalls);
+
   return (
     <View style={styles.root}>
       <View style={styles.volunteerInfo}>
@@ -67,7 +69,11 @@ const VolunteerScreen = () => {
             keyExtractor={(item) => item._id}
             renderItem={({ item }) => {
               return (
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    RootNavigation.navigate("CallDetails", { call: item })
+                  }
+                >
                   <ListItem style={styles.listItem}>
                     <ListItem.Content>
                       <ListItem.Title style={styles.title}>

@@ -97,10 +97,7 @@ const getStatus = (dispatch) => {
   return async () => {
     try {
       const response = await appApi.get("/getStatus");
-      console.log("response from context", response.data);
-
       dispatch({ type: "get_status", payload: response.data });
-      console.log("response from context", response.data);
     } catch (err) {
       console.log(err);
     }

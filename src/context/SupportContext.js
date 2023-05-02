@@ -90,12 +90,10 @@ const addNotesToCall = (dispatch) => {
 
 const retrieveCalls = (dispatch) => {
   return async (volunteerId) => {
-    console.log("volunteerId: ", volunteerId);
     try {
       const response = await appApi.post("/retrieveCalls", {
         volunteerId: volunteerId,
       });
-      console.log("response.data: ", response.data);
       dispatch({ type: "get_calls", payload: response.data });
     } catch (err) {
       console.log(err);

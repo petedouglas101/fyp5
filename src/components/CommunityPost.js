@@ -10,10 +10,6 @@ const CommunityPost = ({ user, date, post, comments, id }) => {
     const year = newDate.getFullYear();
     return `${day} ${month} ${year}`;
   };
-  console.log(comments);
-  console.log(post);
-  console.log(id);
-  console.log(user);
   return (
     <View style={styles.container}>
       <Text style={styles.usernameText}>{user}</Text>

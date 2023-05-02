@@ -12,7 +12,6 @@ const uploadProfilePicture = (dispatch) => {
       const response = await appApi.post("/uploadProfilePicture", {
         imageBase64,
       });
-      console.log(response.data);
     } catch (err) {
       console.log(err);
     }

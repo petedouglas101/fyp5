@@ -15,6 +15,7 @@ import VolunteerScreen from "./src/screens/VolunteerScreen";
 import VolunteerAccountScreen from "./src/screens/VolunteerAccountScreen";
 import AfterCallScreenUser from "./src/screens/AfterCallScreenUser";
 import CommentsScreen from "./src/screens/CommentsScreen";
+import CallDetails from "./src/screens/CallDetails";
 import { Provider as AuthProvider } from "./src/context/AuthContext";
 import { Provider as CommunityProvider } from "./src/context/CommunityContext";
 import { Provider as SupportProvider } from "./src/context/SupportContext";
@@ -172,6 +173,11 @@ export default function App() {
                 <AuthStack.Screen
                   name="CommentsScreen"
                   component={CommentsScreen}
+                  options={{ headerShown: false }}
+                />
+                <AuthStack.Screen
+                  name="CallDetails"
+                  component={CallDetails}
                   options={{ headerShown: false }}
                 />
               </AuthStack.Navigator>
